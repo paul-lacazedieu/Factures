@@ -1,0 +1,43 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="shared-styles">
+
+  <template>
+
+    <style>
+      * {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        box-sizing: border-box;
+      }
+
+      app-header {
+        background-color: var(--app-primary-color);
+        color: #fff;
+      }
+
+      .content {
+        padding: 10px;
+      }
+      
+      .full-height {
+        height: 100%;
+      }
+
+
+    </style>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'shared-styles'
+
+    });
+
+  </script>
+
+</dom-module>

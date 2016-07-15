@@ -1,0 +1,171 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
+
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+
+<link rel="import" href="./shared-styles.html">
+
+<link rel="import" href="my-icons.html">
+
+<dom-module id="factures-app">
+
+  <template>
+
+    <style is="custom-style" include="shared-styles">
+
+      :host {
+        display: block;
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+      }
+
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+      .drawer-list a {
+        display: block;
+        padding: 0 16px;
+        line-height: 40px;
+        text-decoration: none;
+        color: var(--app-secondary-color);
+      }
+      .drawer-list a.iron-selected {
+        color: black;
+        font-weight: bold;
+      }
+      .drawer-list a.subroute {
+        padding-left: 32px;
+      }
+
+
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+      route="{{route}}"
+      pattern="/:page"
+      data="{{routeData}}"
+      tail="{{subroute}}">
+    </app-route>
+    <app-route
+      route="{{subroute}}"
+      pattern="/:id"
+      data="{{subrouteData}}">
+    </app-route>
+
+    <app-drawer-layout fullbleed>
+
+      <!-- Drawer content -->
+      <app-drawer>
+        <app-toolbar>Menu</app-toolbar>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a href="/login">View One</a>
+          <a href="/homepage">View Two</a>
+          <a href="/factures">View Three</a>
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main content -->
+        <neon-animated-pages
+          class="full-height"
+          role="main"
+          selected="[[page]]"
+          attr-for-selected="name"
+          entry-animation="slide-from-left-animation"
+          exit-animation="fade-out-animation">
+          <user-login class="full-height" on-signed-in="showHomepage" name="login"></user-login>
+          <user-homepage class="full-height" name="homepage"></user-homepage>
+          <user-clients class="full-height" name="clients"></user-clients>
+          <user-factures class="full-height" name="factures"></user-factures>
+          <user-devis class="full-height" name="devis"></user-devis>
+          <user-informations class="full-height" name="informations"></user-informations>
+          <error-page class="full-height" name="404"></error-page>
+        </neon-animated-pages>
+
+    </app-drawer-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'factures-app',
+
+      properties: {
+
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
+        pagesList: {
+          type: Array,
+          value: function (){
+            return [
+              'login','homepage', 'clients','factures','devis','informations','404'
+            ]
+          }
+        },
+        user: {
+          type: Object
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function(page) {
+        console.log(page);
+        if (!page /*|| !this.user*/){
+          this.routeData.page = 'login';
+          return;
+        }
+        else if (this.pagesList.indexOf(page) == -1){
+          this.routeData.page = '404';
+          return;
+        }
+        this.page = page || 'login';
+      },
+
+      _pageChanged: function(page) {
+        // load page import on demand.
+        this.importHref(
+          this.resolveUrl(page + '.html'), null, null, true);
+      },
+
+      showHomepage: function () {
+        this.set('route.path', '/homepage');
+      }
+
+    });
+
+  </script>
+
+</dom-module>
