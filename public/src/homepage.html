@@ -34,60 +34,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
 
-      .categorie {
-        color: black;
-        font-size: 20px;
-        font-weight: 300;
-        text-decoration: none;
-        padding: 10px;
-        position: relative;
-      }
-      .categorie p {
-        margin: 0;
-      }
-
-      .categorie:not(:last-child)::after {
-        content: "";
-        display: block;
-        position: absolute;
-        bottom: 0px;
-        height: 1px;
-        background-color: #7e7e7e;
-        width: 98%;
-        left: 1%;
-      }
-
     </style>
 
     <app-header-layout style="height: 100%;" has-scrolling-region>
 
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
-          <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
           <div title>Accueil</div>
+          <div class="flex"></div>
+          <paper-icon-button icon="power-settings-new" on-tap="signOut"></paper-icon-button>
         </app-toolbar>
       </app-header>
 
-      <div class="full-height vertical layout">
-        <a class="categorie flex horizontal layout center" href="/clients">
+      <div class="full-height vertical layout list">
+        <a class="item flex horizontal layout center" href="/clients">
           <p class="flex">Mes clients</p>
           <iron-icon icon="chevron-right"></iron-icon>
           <paper-ripple fit></paper-ripple>
         </a>
 
-        <a class="categorie flex horizontal layout center" href="/factures">
+        <a class="item flex horizontal layout center" href="/factures">
           <p class="flex">Mes factures</p>
           <iron-icon icon="chevron-right"></iron-icon>
           <paper-ripple fit></paper-ripple>
         </a>
 
-        <a class="categorie flex horizontal layout center" href="/devis">
+        <a class="item flex horizontal layout center" href="/devis">
           <p class="flex">Mes devis</p>
           <iron-icon icon="chevron-right"></iron-icon>
           <paper-ripple fit></paper-ripple>
         </a>
 
-        <a class="categorie flex horizontal layout center" href="/informations">
+        <a class="item flex horizontal layout center" href="/informations">
           <p class="flex">Mes informations</p>
           <iron-icon icon="chevron-right"></iron-icon>
           <paper-ripple fit></paper-ripple>
@@ -103,7 +81,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'user-homepage'
+      is: 'user-homepage',
+
+      signOut: function () {
+        this.fire('sign-out')
+      }
 
     });
 

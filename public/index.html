@@ -9,12 +9,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-  <title>My App</title>
+  <title>Factures</title>
 
   <link rel="shortcut icon" sizes="32x32" href="/images/app-icon-32.png">
 
@@ -49,6 +49,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   </script>
 
+  <link rel="import" href="bower_components/platinum-sw/platinum-sw-elements.html">
+  <link rel="import" href="bower_components/polymerfire/firebase-app.html">
+
   <link rel="import" href="/src/factures-app.html">
 
   <style>
@@ -65,6 +68,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 </head>
 <body>
+
+  <platinum-sw-register
+    auto-register
+    skip-wiating
+    clients-claim
+    reload-on-install
+    href="sw-import.js">
+    <platinum-sw-cache
+      default-cache-strategy="networkFirst">
+    </platinum-sw-cache>
+  </platinum-sw-register>
+
+  <firebase-app
+    name="factures"
+    api-key="AIzaSyBGUvGBlTrSRl0qRv3PYNT1OC4gRbbzHx4"
+    auth-domain="factures-917dc.firebaseapp.com"
+    database-url="https://factures-917dc.firebaseio.com">
+  </firebase-app>
+
 
   <factures-app></factures-app>
 

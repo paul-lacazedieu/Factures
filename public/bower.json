@@ -19,7 +19,8 @@
     "paper-button": "PolymerElements/paper-button",
     "neon-animation": "PolymerElements/neon-animation",
     "polymerfire": "firebase/polymerfire",
-    "polymer": "polymer/polymer#^1.4.0"
+    "polymer": "polymer/polymer#^1.4.0",
+    "platinum-sw": "PolymerElements/platinum-sw"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

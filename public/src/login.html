@@ -10,17 +10,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../bower_components/polymerfire/firebase-auth.html">
+
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 
 <dom-module id="user-login">
 
   <template>
 
-    <style>
+  <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
-        --app-primary-color: #4285f4;
-        --app-secondary-color: black;
       }
 
       paper-button {
@@ -30,7 +33,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    <paper-button on-tap="signIn">Log in</paper-button>
+    <firebase-auth
+      app-name="factures"
+      id="auth"
+      user="{{user}}"
+      provider="google">
+    </firebase-auth>
+
+    <div class="full-height vertical layout center center-justified">
+      <paper-button class=""on-tap="signIn">Se connecter</paper-button>
+    </div>
 
   </template>
 
@@ -47,11 +59,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       signIn: function () {
-        this.fire('signed-in')
+        var self = this;
+        this.$.auth.signInWithPopup()
+          .then(function(response) {
+            self.user = response.user;
+            self.fire('signed-in');
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+
       },
 
       signOut: function () {
-
+        this.$.auth.signOut();
       },
 
       get user(){

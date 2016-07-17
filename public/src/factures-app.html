@@ -78,36 +78,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       data="{{subrouteData}}">
     </app-route>
 
-    <app-drawer-layout fullbleed>
-
-      <!-- Drawer content -->
-      <app-drawer>
-        <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a href="/login">View One</a>
-          <a href="/homepage">View Two</a>
-          <a href="/factures">View Three</a>
-        </iron-selector>
-      </app-drawer>
-
-      <!-- Main content -->
-        <neon-animated-pages
-          class="full-height"
-          role="main"
-          selected="[[page]]"
-          attr-for-selected="name"
-          entry-animation="slide-from-left-animation"
-          exit-animation="fade-out-animation">
-          <user-login class="full-height" on-signed-in="showHomepage" name="login"></user-login>
-          <user-homepage class="full-height" name="homepage"></user-homepage>
-          <user-clients class="full-height" name="clients"></user-clients>
-          <user-factures class="full-height" name="factures"></user-factures>
-          <user-devis class="full-height" name="devis"></user-devis>
-          <user-informations class="full-height" name="informations"></user-informations>
-          <error-page class="full-height" name="404"></error-page>
-        </neon-animated-pages>
-
-    </app-drawer-layout>
+    <div class="my-fullbleed">
+      <neon-animated-pages
+        class="full-height"
+        role="main"
+        selected="[[page]]"
+        attr-for-selected="name"
+        entry-animation="slide-from-left-animation"
+        exit-animation="fade-out-animation">
+        <user-login id="login" class="full-height" on-signed-in="userSignedIn" name="login"></user-login>
+        <user-homepage id="homepage" class="full-height" on-sign-out="userSignOut" name="homepage"></user-homepage>
+        <user-clients id="clients" class="full-height" name="clients"></user-clients>
+        <user-factures id="factures" class="full-height" name="factures"></user-factures>
+        <user-devis id="devis" class="full-height" name="devis"></user-devis>
+        <user-informations id="informations" class="full-height" name="informations"></user-informations>
+        <error-page class="full-height" name="404"></error-page>
+      </neon-animated-pages>
+    </div>
 
   </template>
 
@@ -134,6 +121,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         user: {
           type: Object
+        },
+        connected: {
+          type: Boolean,
+          value: false
         }
       },
 
@@ -142,8 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       _routePageChanged: function(page) {
-        console.log(page);
-        if (!page /*|| !this.user*/){
+        if (!page || (!this.connected && page != 'login')){
           this.routeData.page = 'login';
           return;
         }
@@ -151,7 +141,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.routeData.page = '404';
           return;
         }
-        this.page = page || 'login';
+        this.page = page;
       },
 
       _pageChanged: function(page) {
@@ -160,8 +150,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.resolveUrl(page + '.html'), null, null, true);
       },
 
-      showHomepage: function () {
+      userSignedIn: function () {
+        this.connected = true;
+        this.user = this.$.login.user;
         this.set('route.path', '/homepage');
+      },
+
+      userSignOut: function(){
+        this.connected = false;
+        this.$.login.signOut();
+        this.set('route.path', '/login');
       }
 
     });
