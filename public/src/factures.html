@@ -8,17 +8,17 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/polymer/polymer.html">
 
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
 
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="./shared-styles.html">
 
@@ -32,7 +32,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <app-header-layout style="height: 100%;" has-scrolling-region>
+    <app-header-layout class="full-height" has-scrolling-region>
 
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
@@ -61,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         factures: {
           type: Array,
           value: function(){
-            return [{name: "Facture 1", total: 456, client: "Client Name"}, {name: "Facture 2", total: 232, client: "Client Name"}, {name: "Facture 3", total: 1056, client: "Client Name"}, {name: "Facture 4", total: 369, client: "Client Name"}, {name: "Facture 5", total: 30, client: "Client Name"}, {name: "Facture X", total: "XXX", client: "Client Name"}, {name: "Facture X", total: "XXX", client: "Client Name"}, {name: "Facture X", total: "XXX", client: "Client Name"}]
+            return [{name: "Facture 1", total: 456, client: "Client Name", ref: 1}, {name: "Facture 2", total: 232, client: "Client Name", ref: 2}, {name: "Facture 3", total: 1056, client: "Client Name", ref: 3}, {name: "Facture 4", total: 369, client: "Client Name", ref: 4}, {name: "Facture 5", total: 30, client: "Client Name", ref: 5}, {name: "Facture X", total: "XXX", client: "Client Name", ref: 6}, {name: "Facture X", total: "XXX", client: "Client Name", ref: 7}, {name: "Facture X", total: "XXX", client: "Client Name", ref: 8}]
           }
         }
       }
@@ -81,20 +81,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: block;
         }
 
-        p{
-          margin: 5px 0px;
+        .vertical.layout{
+          padding: 10px;
         }
 
+        p{
+          margin: 0;
+          padding: 5px 0 0 0;
+        }
+
+        a{
+          color: black;
+          text-decoration: none;
+        }
       </style>
 
-      <div class="vertical layout">
-        <div class="horizontal layout">
-          <p class="flex">{{facture.name}}</p>
-          <p>{{facture.total}} €</p>
+      <a href="/factures/{{facture.ref}}">
+        <div class="vertical layout">
+          <div class="horizontal layout">
+            <p class="flex">{{facture.name}}</p>
+            <p>{{facture.total}} €</p>
+          </div>
+          <p>{{facture.client}}</p>
+          <paper-ripple fit></paper-ripple>
         </div>
-        <p>{{facture.client}}</p>
-        <paper-ripple fit></paper-ripple>
-      </div>
+      </a>
 
     </template>
 

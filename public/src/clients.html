@@ -37,8 +37,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-toolbar>
       </app-header>
 
-      <div class="content">
-
+      <div class="full-height vertical layout list">
+        <template is="dom-repeat" items=[[clients]]>
+          <client-item class="item" client="{{item}}"></client-item>
+        </template>
       </div>
 
     </app-header-layout>
@@ -49,7 +51,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'user-clients'
+      is: 'user-clients',
+      properties: {
+        clients: {
+          type: Array,
+          value: function () {
+            return [{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 1},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 2},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 3},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 4},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 5},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 6},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 7},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 8}]
+          }
+        }
+      }
 
     });
 
@@ -61,12 +71,39 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <template>
 
-      <style is="custom-style" include="shared-styles">
+      <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
         :host {
           display: block;
         }
 
+        .vertical.layout{
+          padding: 10px;
+        }
+
+        p{
+          margin: 5px 0 0 0;
+        }
+
+        a{
+          color: black;
+          text-decoration: none;
+        }
+
+        .little {
+          font-size: 16px;
+        }
       </style>
+
+      <a  href="/clients/{{client.ref}}">
+        <div class="vertical layout">
+          <p>{{client.name}}</p>
+          <div class="little">
+            <p>{{client.address}}</p>
+            <p>{{client.phone_number}}</p>
+          </div>
+          <paper-ripple fit></paper-ripple>
+        </div>
+      </a>
 
     </template>
 
@@ -74,7 +111,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       Polymer({
 
-        is: 'client-item'
+        is: 'client-item',
+
+        properties: {
+          client: {
+            type: Object
+          }
+        }
 
       });
 
