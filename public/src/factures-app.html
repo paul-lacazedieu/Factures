@@ -1,12 +1,4 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+
 <link rel="import" href="/bower_components/polymer/polymer.html">
 
 <link rel="import" href="/bower_components/app-route/app-location.html">
@@ -62,9 +54,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         exit-animation="fade-out-animation">
         <user-login id="login" class="full-height" on-signed-in="userSignedIn" name="login"></user-login>
         <user-homepage id="homepage" class="full-height" on-sign-out="userSignOut" name="homepage"></user-homepage>
-        <user-clients id="clients" class="full-height" name="clients"></user-clients>
-        <user-factures id="factures" class="full-height" name="factures"></user-factures>
-        <user-devis id="devis" class="full-height" name="devis"></user-devis>
+        <user-clients id="clients" class="full-height" route="{{subroute}}" name="clients"></user-clients>
+        <user-factures id="factures" class="full-height" route="{{subroute}}" name="factures"></user-factures>
+        <user-devis id="devis" class="full-height" route="{{subroute}}" name="devis"></user-devis>
         <user-informations id="informations" class="full-height" name="informations"></user-informations>
         <error-page class="full-height" name="404"></error-page>
       </neon-animated-pages>
@@ -107,7 +99,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ],
 
       _routePageChanged: function(page) {
-        console.log(page);
+        if (this.page == page){
+          return;
+        }
         if (!page || (!this.connected && page != 'login')){
           this.routeData.page = 'login';
           return;
@@ -116,6 +110,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.routeData.page = '404';
           return;
         }
+        console.log(page);
         this.page = page;
       },
 

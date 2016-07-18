@@ -1,19 +1,16 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="/bower_components/polymer/polymer.html">
 
 <link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/slide-from-left-animation.html">
+
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
 
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
@@ -23,38 +20,50 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="./shared-styles.html">
 
 <dom-module id="user-devis">
-
   <template>
-
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
       }
     </style>
 
-    <app-header-layout style="height: 100%;" has-scrolling-region>
+    <app-route
+      route="{{route}}"
+      pattern="/list"
+      active="{{listActive}}">
+    </app-route>
+    <app-route
+      route="{{route}}"
+      pattern="/show/:id"
+      data="{{showData}}"
+      active="{{showActive}}">
+    </app-route>
 
+    <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
-          <a href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
+          <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
           <div title>Mes devis</div>
         </app-toolbar>
       </app-header>
 
-      <div class="full-height vertical layout list">
-        <template is="dom-repeat" items=[[devis]]>
-          <devis-item class="item" devis="{{item}}"></devis-item>
-        </template>
-      </div>
+      <neon-animated-pages
+        class="full-height"
+        entry-animation="slide-from-left-animation"
+        exit-animation="fade-out-animation"
+        selected="{{selected}}">
 
+        <devis-list class="full-height" devis="{{devis}}">
+        </devis-list>
+        <devis-detail devis="{{selectedDevis}}">
+        </devis-detail>
+
+      </neon-animated-pages>
     </app-header-layout>
 
   </template>
-
   <script>
-
     Polymer({
-
       is: 'user-devis',
 
       properties: {
@@ -63,19 +72,105 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: function(){
             return [{name: "Devis 1", total: 456, client: "Client Name", ref: 1}, {name: "Devis 2", total: 232, client: "Client Name", ref: 2}, {name: "Devis 3", total: 1056, client: "Client Name", ref: 3}, {name: "Devis 4", total: 369, client: "Client Name", ref: 4}, {name: "Devis 5", total: 30, client: "Client Name", ref: 5}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 6}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 7}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 8}]
           }
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        },
+        showData: {
+          type: Object,
+        },
+        showActive: {
+          type: Boolean,
+        },
+        listActive: {
+          type: Boolean,
+        },
+        selected: {
+          type: Number,
+          value: 0
+        },
+        selectedDevis: {
+          type: Object
+        }
+      },
+
+      _routeChanged: function (route) {
+        if (route && route.prefix == '/devis'){
+          if (this.listActive){
+            this.selected = 0;
+            console.log(this.$.backButton);
+            this.$.backButton.href = "/homepage"
+          }
+          else if (this.showActive){
+            this.$.backButton.href = "/devis/list"
+            this.selectedDevis = this.devis[this.showData.id - 1];
+            this.selected = 1;
+          }
+        }
+      },
+    });
+  </script>
+</dom-module>
+
+<dom-module id="devis-list">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="full-height vertical layout list">
+      <template is="dom-repeat" items=[[devis]]>
+        <devis-item class="item" devis="{{item}}"></devis-item>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'devis-list',
+
+      properties: {
+        devis: {
+          type: Array
         }
       }
-
     });
-
   </script>
+</dom-module>
 
+<dom-module id="devis-detail">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="full-height">
+      <p>{{devis.name}}</p>
+      <p>{{devis.client}}</p>
+      <p>{{devis.total}} €</p>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'devis-detail',
+
+      properties: {
+        devis: {
+          type: Object
+        }
+      }
+    });
+  </script>
 </dom-module>
 
 <dom-module id="devis-item">
-
     <template>
-
       <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
         :host {
           display: block;
@@ -86,7 +181,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         p{
-          margin: 5px 0 0 0;
+          margin: 0;
+          padding: 5px 0 0 0;
         }
 
         a{
@@ -95,7 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       </style>
 
-      <a  href="/devis/{{devis.ref}}">
+      <a href="/devis/show/{{devis.ref}}">
         <div class="vertical layout">
           <div class="horizontal layout">
             <p class="flex">{{devis.name}}</p>
@@ -107,11 +203,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </a>
 
     </template>
-
     <script>
-
       Polymer({
-
         is: 'devis-item',
 
         properties: {
@@ -121,7 +214,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
       });
-
     </script>
-
 </dom-module>

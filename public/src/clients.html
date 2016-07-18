@@ -1,54 +1,69 @@
-<!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+<link rel="import" href="/bower_components/polymer/polymer.html">
 
-<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
 
-<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/slide-from-left-animation.html">
+
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="./shared-styles.html">
 
 <dom-module id="user-clients">
-
   <template>
-
-    <style is="custom-style" include="shared-styles">
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
       }
 
     </style>
 
-    <app-header-layout style="height: 100%;" has-scrolling-region>
+    <app-route
+      route="{{route}}"
+      pattern="/list"
+      active="{{listActive}}">
+    </app-route>
+    <app-route
+      route="{{route}}"
+      pattern="/show/:id"
+      data="{{showData}}"
+      active="{{showActive}}">
+    </app-route>
 
+    <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
-          <a href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
+          <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
           <div title>Mes clients</div>
         </app-toolbar>
       </app-header>
 
-      <div class="full-height vertical layout list">
-        <template is="dom-repeat" items=[[clients]]>
-          <client-item class="item" client="{{item}}"></client-item>
-        </template>
-      </div>
+      <neon-animated-pages
+        class="full-height"
+        entry-animation="slide-from-left-animation"
+        exit-animation="fade-out-animation"
+        selected="{{selected}}">
 
+        <clients-list class="full-height" clients="{{clients}}">
+        </clients-list>
+        <client-detail client="{{selectedClient}}">
+        </client-detail>
+
+      </neon-animated-pages>
     </app-header-layout>
 
   </template>
-
   <script>
-
     Polymer({
 
       is: 'user-clients',
@@ -58,19 +73,105 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: function () {
             return [{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 1},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 2},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 3},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 4},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 5},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 6},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 7},{name: "Client Name", address: "21 address of client, XXXXX City", phone_number: "0X XX XX XX XX", ref: 8}]
           }
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        },
+        showData: {
+          type: Object,
+        },
+        showActive: {
+          type: Boolean,
+        },
+        listActive: {
+          type: Boolean,
+        },
+        selected: {
+          type: Number,
+          value: 0
+        },
+        selectedClient: {
+          type: Object
+        }
+      },
+
+      _routeChanged: function (route) {
+        if (route && route.prefix == '/clients'){
+          if (this.listActive){
+            this.selected = 0;
+            console.log(this.$.backButton);
+            this.$.backButton.href = "/homepage"
+          }
+          else if (this.showActive){
+            this.$.backButton.href = "/clients/list"
+            this.selectedClient = this.clients[this.showData.id - 1];
+            this.selected = 1;
+          }
+        }
+      },
+    });
+  </script>
+</dom-module>
+
+<dom-module id="clients-list">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="full-height vertical layout list">
+      <template is="dom-repeat" items=[[clients]]>
+        <client-item class="item" client="{{item}}"></client-item>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'clients-list',
+
+      properties: {
+        clients: {
+          type: Array
         }
       }
-
     });
-
   </script>
+</dom-module>
 
+<dom-module id="client-detail">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="full-height">
+      <p>{{client.name}}</p>
+      <p>{{client.address}}</p>
+      <p>{{client.phone_number}}</p>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'client-detail',
+
+      properties: {
+        client: {
+          type: Object
+        }
+      }
+    });
+  </script>
 </dom-module>
 
 <dom-module id="client-item">
-
     <template>
-
       <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
         :host {
           display: block;
@@ -94,7 +195,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       </style>
 
-      <a  href="/clients/{{client.ref}}">
+      <a  href="/clients/show/{{client.ref}}">
         <div class="vertical layout">
           <p>{{client.name}}</p>
           <div class="little">
@@ -106,11 +207,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </a>
 
     </template>
-
     <script>
-
       Polymer({
-
         is: 'client-item',
 
         properties: {
@@ -120,7 +218,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
       });
-
     </script>
-
 </dom-module>
