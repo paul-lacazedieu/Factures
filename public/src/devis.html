@@ -15,6 +15,7 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
 
 <link rel="import" href="./shared-styles.html">
@@ -146,13 +147,223 @@
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
+        /*padding: 10px;*/
+      }
+
+      .devis-layout {
+        font-weight: 300;
+        padding: 10px;
+      }
+
+      .entete {
+        margin-bottom: 15px;
+      }
+
+      .entete .entreprise-info {
+        margin-right: 15px;
+      }
+
+      .devis-info p {
+        margin: 5px 0px;
+      }
+
+      .devis-info {
+        margin-bottom: 15px;
+      }
+
+      @media screen and (max-width: 768px) {
+        .horizontal.layout.entete {
+          display: inline-block;
+        }
+        .entreprise-info {
+          margin-right: 0px;
+          margin-bottom: 15px;
+          width: 100%;
+          float: left;
+        }
+
+        .client-info {
+          width: 100%;
+          float: left;
+        }
       }
     </style>
 
-    <div class="full-height">
-      <p>{{devis.name}}</p>
-      <p>{{devis.client}}</p>
-      <p>{{devis.total}} €</p>
+    <div class="vertical layout devis-layout">
+
+      <!-- Début en-tête -->
+      <div class="horizontal layout entete">
+
+        <!-- Informations Entreprise -->
+        <paper-card class="entreprise-info">
+          <div class="card-content">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    LACAZEDIEU PLOMBERIE
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    12 avenue Charles de Gaulle, 81300 Graulhet
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    05 63 34 55 03
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </paper-card>
+
+        <div class="flex"></div>
+
+        <!-- Informations Client -->
+        <paper-card class="client-info">
+          <div class="card-content">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    Paul LACAZEDIEU
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    54 bis avenue Bérénice, 81300 Graulhet
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    06 35 12 08 25
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </paper-card>
+
+      </div>
+      <!-- Fin en-tête -->
+
+      <!-- Début informations devis -->
+      <paper-card class="devis-info">
+        <div class="card-content horizontal layout">
+          <div>
+            <p>{{devis.name}}</p>
+          </div>
+          <div class="flex"></div>
+          <div class="vertical layout">
+            <p>Date</p>
+            <p>Heure</p>
+          </div>
+        </div>
+      </paper-card>
+      <!-- Fin informations devis -->
+
+      <!-- Début liste articles -->
+      <paper-card class="articles-list">
+        <div class="vertical layout">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  Article
+                </th>
+                <th>
+                  Quantité
+                </th>
+                <th>
+                  Prix
+                </th>
+                <th>
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-actions horizontal layout end-justified">
+          <p>Total: XXX €</p>
+        </div>
+      </paper-card>
+      <!-- Fin liste articles -->
+
     </div>
 
   </template>
