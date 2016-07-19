@@ -38,6 +38,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding: 10px;
       }
 
+      a {
+        min-height: 64px;
+      }
+
     </style>
 
     <app-header-layout style="height: 100%;" has-scrolling-region>
@@ -71,6 +75,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <a class="item flex horizontal layout center" href="/informations">
           <p class="flex">Mes informations</p>
+          <iron-icon icon="chevron-right"></iron-icon>
+          <paper-ripple fit></paper-ripple>
+        </a>
+
+        <a class="item flex horizontal layout center" href="/prestations">
+          <p class="flex">Mes prestations</p>
           <iron-icon icon="chevron-right"></iron-icon>
           <paper-ripple fit></paper-ripple>
         </a>

@@ -16,6 +16,7 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
 
 <link rel="import" href="./shared-styles.html">
 
@@ -147,14 +148,28 @@
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
+        /*padding: 10px;*/
+      }
+
+      .facture-layout {
+        font-weight: 300;
         padding: 10px;
       }
 
-      .facture-info {
-        margin-top: 5px;
+      .entete {
+        margin-bottom: 15px;
       }
+
+      .entete .entreprise-info {
+        margin-right: 15px;
+      }
+
       .facture-info p {
         margin: 5px 0px;
+      }
+
+      .facture-info {
+        margin-bottom: 15px;
       }
 
       table {
@@ -167,174 +182,232 @@
 
       .articles-list table {
         text-align: center;
+        border-collapse: collapse;
+      }
+
+      .articles-list  table th {
+        padding: 10px;
+        height: 54px;
+        font-weight: 300;
+      }
+
+      .articles-list  table td {
+        padding: 10px;
+        height: 48px;
+        font-weight: 100;
+      }
+
+      .articles-list table tr td:first-child, .articles-list table tr th:first-child {
+        text-align: left;
+      }
+
+      .articles-list table tr td:last-child, .articles-list table tr th:last-child {
+        text-align: right;
+      }
+
+      .articles-list table tbody tr:hover {
+        background-color: #EEEEEE;
+      }
+
+      .articles-list table thead tr th {
+        border-bottom: 1px solid #d4d4d4;
+      }
+
+      .articles-list table tbody tr:not(:last-child) td {
+        border-bottom: 1px solid var(--app-divider-color);
+      }
+
+      @media screen and (max-width: 768px) {
+        .horizontal.layout.entete {
+          display: inline-block;
+        }
+        .entreprise-info {
+          margin-right: 0px;
+          margin-bottom: 15px;
+          width: 100%;
+          float: left;
+        }
+
+        .client-info {
+          width: 100%;
+          float: left;
+        }
       }
     </style>
 
-    <div class="full-height vertical layout">
+    <div class="vertical layout facture-layout">
 
       <!-- Début en-tête -->
       <div class="horizontal layout entete">
 
         <!-- Informations Entreprise -->
-        <div class="entreprise-info">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  Nom entreprise
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Adresse entreprise
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Téléphone entreprise
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <paper-card class="entreprise-info">
+          <div class="card-content">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    LACAZEDIEU PLOMBERIE
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    12 avenue Charles de Gaulle, 81300 Graulhet
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    05 63 34 55 03
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </paper-card>
 
         <div class="flex"></div>
 
         <!-- Informations Client -->
-        <div class="client-info">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  Nom client
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Adresse client
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Téléphone client
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <paper-card class="client-info">
+          <div class="card-content">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    Paul LACAZEDIEU
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    54 bis avenue Bérénice, 81300 Graulhet
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    06 35 12 08 25
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </paper-card>
 
       </div>
       <!-- Fin en-tête -->
 
       <!-- Début informations facture -->
-      <div class="horizontal layout facture-info">
-        <div>
-          <p>{{facture.name}}</p>
+      <paper-card class="facture-info">
+        <div class="card-content horizontal layout">
+          <div>
+            <p>{{facture.name}}</p>
+          </div>
+          <div class="flex"></div>
+          <div class="vertical layout">
+            <p>Date</p>
+            <p>Heure</p>
+          </div>
         </div>
-        <div class="flex"></div>
-        <div class="vertical layout">
-          <p>Date</p>
-          <p>Heure</p>
-        </div>
-      </div>
+      </paper-card>
       <!-- Fin informations facture -->
 
       <!-- Début liste articles -->
-      <div class="vertical layout articles-list">
-        <table>
-          <thead>
-            <tr>
-              <th>
-                Article
-              </th>
-              <th>
-                Quantité
-              </th>
-              <th>
-                Prix
-              </th>
-              <th>
-                Total
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                Article 1
-              </td>
-              <td>
-                5
-              </td>
-              <td>
-                25.99 €
-              </td>
-              <td>
-                129.95 €
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Article 1
-              </td>
-              <td>
-                5
-              </td>
-              <td>
-                25.99 €
-              </td>
-              <td>
-                129.95 €
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Article 1
-              </td>
-              <td>
-                5
-              </td>
-              <td>
-                25.99 €
-              </td>
-              <td>
-                129.95 €
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Article 1
-              </td>
-              <td>
-                5
-              </td>
-              <td>
-                25.99 €
-              </td>
-              <td>
-                129.95 €
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Article 1
-              </td>
-              <td>
-                5
-              </td>
-              <td>
-                25.99 €
-              </td>
-              <td>
-                129.95 €
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="horizontal layout end-justified">
+      <paper-card class="articles-list">
+        <div class="vertical layout">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  Article
+                </th>
+                <th>
+                  Quantité
+                </th>
+                <th>
+                  Prix
+                </th>
+                <th>
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Article 1
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  25.99 €
+                </td>
+                <td>
+                  129.95 €
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-actions horizontal layout end-justified">
           <p>Total: XXX €</p>
         </div>
-      </div>
+      </paper-card>
       <!-- Fin liste articles -->
 
     </div>

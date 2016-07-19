@@ -20,9 +20,16 @@
     "neon-animation": "PolymerElements/neon-animation",
     "polymerfire": "firebase/polymerfire",
     "polymer": "polymer/polymer#^1.4.0",
-    "platinum-sw": "PolymerElements/platinum-sw"
+    "platinum-sw": "PolymerElements/platinum-sw",
+    "paper-datatable": "^0.9.8",
+    "paper-card": "PolymerElements/paper-card#^1.1.1"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
+  },
+  "resolutions": {
+    "paper-icon-button": "~1.1.1",
+    "polymer": "^1.5.0",
+    "paper-styles": "^1.1.0"
   }
 }

@@ -58,6 +58,7 @@
         <user-factures id="factures" class="full-height" route="{{subroute}}" name="factures"></user-factures>
         <user-devis id="devis" class="full-height" route="{{subroute}}" name="devis"></user-devis>
         <user-informations id="informations" class="full-height" name="informations"></user-informations>
+        <user-prestations id="prestations" class="full-height" name="prestations"></user-informations>
         <error-page class="full-height" name="404"></error-page>
       </neon-animated-pages>
     </div>
@@ -80,9 +81,7 @@
         pagesList: {
           type: Array,
           value: function (){
-            return [
-              'login','homepage', 'clients','factures','devis','informations','404'
-            ]
+            return ['login','homepage', 'clients','factures','devis','informations','prestations','404']
           }
         },
         user: {
@@ -102,7 +101,7 @@
         if (this.page == page){
           return;
         }
-        if (!page || (!this.connected && page != 'login')){
+        if (!page /*|| (!this.connected && page != 'login')*/){
           this.routeData.page = 'login';
           return;
         }
