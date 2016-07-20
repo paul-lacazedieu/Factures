@@ -1,0 +1,111 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="/bower_components/neon-animation/animations/slide-from-left-animation.html">
+
+<link rel="import" href="/bower_components/app-route/app-location.html">
+<link rel="import" href="/bower_components/app-route/app-route.html">
+
+<link rel="import" href="/src/devis/list.html">
+<link rel="import" href="/src/devis/detail.html">
+
+<link rel="import" href="/src/shared-styles.html">
+
+<dom-module id="user-devis">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/list"
+      active="{{listActive}}">
+    </app-route>
+    <app-route
+      route="{{route}}"
+      pattern="/show/:id"
+      data="{{showData}}"
+      active="{{showActive}}">
+    </app-route>
+
+    <app-header-layout class="full-height" has-scrolling-region>
+      <app-header condenses reveals effects="waterfall">
+        <app-toolbar>
+          <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
+          <div title>Mes devis</div>
+        </app-toolbar>
+      </app-header>
+
+      <neon-animated-pages
+        class="full-height"
+        entry-animation="slide-from-left-animation"
+        exit-animation="fade-out-animation"
+        selected="{{selected}}">
+
+        <devis-list class="full-height" devis="{{devis}}">
+        </devis-list>
+        <devis-detail devis="{{selectedDevis}}">
+        </devis-detail>
+
+      </neon-animated-pages>
+    </app-header-layout>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'user-devis',
+
+      properties: {
+        devis: {
+          type: Array,
+          value: function(){
+            return [{name: "Devis 1", total: 456, client: "Client Name", ref: 1}, {name: "Devis 2", total: 232, client: "Client Name", ref: 2}, {name: "Devis 3", total: 1056, client: "Client Name", ref: 3}, {name: "Devis 4", total: 369, client: "Client Name", ref: 4}, {name: "Devis 5", total: 30, client: "Client Name", ref: 5}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 6}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 7}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 8}]
+          }
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        },
+        showData: {
+          type: Object,
+        },
+        showActive: {
+          type: Boolean,
+        },
+        listActive: {
+          type: Boolean,
+        },
+        selected: {
+          type: Number,
+          value: 0
+        },
+        selectedDevis: {
+          type: Object
+        }
+      },
+
+      _routeChanged: function (route) {
+        if (route && route.prefix == '/devis'){
+          if (this.listActive){
+            this.selected = 0;
+            this.$.backButton.href = "/homepage"
+          }
+          else if (this.showActive){
+            this.$.backButton.href = "/devis/list"
+            this.selectedDevis = this.devis[this.showData.id - 1];
+            this.selected = 1;
+          }
+        }
+      },
+    });
+  </script>
+</dom-module>

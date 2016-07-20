@@ -1,0 +1,27 @@
+<dom-module id="clients-list">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="full-height vertical layout list">
+      <template is="dom-repeat" items={{clients}}>
+        <client-item class="item" client="{{item}}"></client-item>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'clients-list',
+
+      properties: {
+        clients: {
+          type: Array
+        }
+      }
+    });
+  </script>
+</dom-module>

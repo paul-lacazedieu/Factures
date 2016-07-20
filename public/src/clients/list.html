@@ -1,0 +1,48 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/polymerfire/firebase-query.html">
+
+<link rel="import" href="/src/clients/item.html">
+
+<link rel="import" href="/src/shared-styles.html">
+
+<dom-module id="clients-list">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <firebase-query
+      id="query"
+      app-name="factures"
+      path="/users/[[uid]]/clients"
+      data="{{clients}}">
+    </firebase-query>
+
+    <div class="full-height vertical layout list">
+      <template is="dom-repeat" items={{clients}}>
+        <client-item class="item" client="{{item}}"></client-item>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'clients-list',
+
+      properties: {
+        uid: {
+          type: String
+        },
+        clients: {
+          type: Array
+        }
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,36 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/src/factures/item.html">
+
+<link rel="import" href="/src/shared-styles.html">
+
+<dom-module id="factures-list">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <div class="full-height vertical layout list">
+      <template is="dom-repeat" items=[[factures]]>
+        <facture-item class="item" facture="{{item}}"></facture-item>
+      </template>
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'factures-list',
+
+      properties: {
+        factures: {
+          type: Array
+        }
+      }
+    });
+  </script>
+</dom-module>

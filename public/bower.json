@@ -22,7 +22,9 @@
     "polymer": "polymer/polymer#^1.4.0",
     "platinum-sw": "PolymerElements/platinum-sw",
     "paper-datatable": "^0.9.8",
-    "paper-card": "PolymerElements/paper-card#^1.1.1"
+    "paper-card": "PolymerElements/paper-card#^1.1.1",
+    "paper-input": "PolymerElements/paper-input#^1.1.15",
+    "paper-fab": "PolymerElements/paper-fab#^1.2.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"

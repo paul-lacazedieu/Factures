@@ -1,0 +1,56 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/src/shared-styles.html">
+
+<dom-module id="devis-item">
+    <template>
+      <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+        :host {
+          display: block;
+        }
+
+        .vertical.layout{
+          padding: 10px;
+        }
+
+        p{
+          margin: 0;
+          padding: 5px 0 0 0;
+        }
+
+        a{
+          color: black;
+          text-decoration: none;
+        }
+      </style>
+
+      <a href="/devis/show/{{devis.ref}}">
+        <div class="vertical layout">
+          <div class="horizontal layout">
+            <p class="flex">{{devis.name}}</p>
+            <p>{{devis.total}} €</p>
+          </div>
+          <p>{{devis.client}}</p>
+          <paper-ripple fit></paper-ripple>
+        </div>
+      </a>
+
+    </template>
+    <script>
+      Polymer({
+        is: 'devis-item',
+
+        properties: {
+          devis: {
+            type: Object
+          }
+        }
+
+      });
+    </script>
+</dom-module>

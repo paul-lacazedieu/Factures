@@ -16,7 +16,7 @@
 <link rel="import" href="/bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="/bower_components/iron-selector/iron-selector.html">
 
-<link rel="import" href="./shared-styles.html">
+<link rel="import" href="/src/shared-styles.html">
 
 <link rel="import" href="my-icons.html">
 
@@ -54,11 +54,11 @@
         exit-animation="fade-out-animation">
         <user-login id="login" class="full-height" on-signed-in="userSignedIn" name="login"></user-login>
         <user-homepage id="homepage" class="full-height" on-sign-out="userSignOut" name="homepage"></user-homepage>
-        <user-clients id="clients" class="full-height" route="{{subroute}}" name="clients"></user-clients>
-        <user-factures id="factures" class="full-height" route="{{subroute}}" name="factures"></user-factures>
-        <user-devis id="devis" class="full-height" route="{{subroute}}" name="devis"></user-devis>
-        <user-prestations id="prestations" class="full-height" name="prestations"></user-prestations>
-        <user-informations id="informations" class="full-height" name="informations"></user-informations>
+        <user-clients id="clients" class="full-height" route="{{subroute}}" name="clients" uid="{{user.uid}}"></user-clients>
+        <user-factures id="factures" class="full-height" route="{{subroute}}" name="factures" uid="{{user.uid}}"></user-factures>
+        <user-devis id="devis" class="full-height" route="{{subroute}}" name="devis" uid="{{user.uid}}"></user-devis>
+        <user-prestations id="prestations" class="full-height" name="prestations" uid="{{user.uid}}"></user-prestations>
+        <user-informations id="informations" class="full-height" name="informations" uid="{{user.uid}}"></user-informations>
         <error-page class="full-height" name="404"></error-page>
       </neon-animated-pages>
     </div>
@@ -84,6 +84,12 @@
             return ['login','homepage', 'clients','factures','devis','informations','prestations','404']
           }
         },
+        directoryList: {
+          type: Array,
+          value: function (){
+            return ['devis', 'factures', 'clients']//'factures', 'clients', 'devis', 'informations', 'prestations'
+          }
+        },
         user: {
           type: Object
         },
@@ -101,7 +107,7 @@
         if (this.page == page){
           return;
         }
-        if (!page /*|| (!this.connected && page != 'login')*/){
+        if (!page || (!this.connected && page != 'login')){
           this.routeData.page = 'login';
           return;
         }
@@ -115,6 +121,9 @@
 
       _pageChanged: function(page) {
         // load page import on demand.
+        if (this.directoryList.indexOf(page) != -1){
+          page = page + "/page";
+        }
         this.importHref(
           this.resolveUrl("http://localhost:8080/src/" + page + '.html'), null, null, true);
       },

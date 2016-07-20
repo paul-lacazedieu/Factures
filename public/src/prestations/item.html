@@ -1,0 +1,50 @@
+<dom-module id="client-item">
+    <template>
+      <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+        :host {
+          display: block;
+        }
+
+        .vertical.layout{
+          padding: 10px;
+        }
+
+        p{
+          margin: 5px 0 0 0;
+        }
+
+        a{
+          color: black;
+          text-decoration: none;
+        }
+
+        .little {
+          font-size: 14px;
+        }
+      </style>
+
+      <a  href="/clients/show/{{client.$key}}">
+        <div class="vertical layout">
+          <p>{{client.name}}</p>
+          <div class="little">
+            <p>{{client.address}}</p>
+            <p>{{client.phone_number}}</p>
+          </div>
+          <paper-ripple fit></paper-ripple>
+        </div>
+      </a>
+
+    </template>
+    <script>
+      Polymer({
+        is: 'client-item',
+
+        properties: {
+          client: {
+            type: Object
+          }
+        }
+
+      });
+    </script>
+</dom-module>

@@ -18,8 +18,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+
 
 <link rel="import" href="./shared-styles.html">
 
@@ -32,7 +40,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block;
       }
 
+      #card-container {
+        width: 80%;
+        max-width: 600px;
+      }
+
+      #editableInfoCard {
+        display: none;
+      }
+
     </style>
+
+    <firebase-document
+      app-name="factures"
+      path="/users/{{uid}}/infos"
+      data="{{user}}">
+    </firebase-document>
 
     <app-header-layout class="full-height" has-scrolling-region>
 
@@ -45,16 +68,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <div class="full-height vertical layout center">
 
-        <div class="flex horizontal layout center">
+        <div id="card-container" class="flex horizontal layout center">
+
           <paper-card class="flex">
-            <div class="card-content">
-              <h2>LACAZEDIEU PLOMBERIE</h2>
-              <p>lacazedieu.plomberie@gmail.com</p>
-              <p>12 avenue Charles de Gaulle</p>
-              <p>05 63 34 55 03</p>
-            </div>
-          </paper-card>
-        </div>
+              <div class="card-content">
+                <div id="infoCard" class="vertical layout">
+                  <h2>{{user.name}}</h2>
+                  <p>{{user.email}}</p>
+                  <p>{{user.address}}</p>
+                  <p>{{user.phone_number}}</p>
+                </div>
+
+                <div id="editableInfoCard" class="vertical layout">
+                  <paper-input label="Nom" value="{{user.name}}"></paper-input>
+                  <paper-input label="E-mail" value="{{user.email}}"></paper-input>
+                  <paper-input label="Adresse" value="{{user.address}}"></paper-input>
+                  <paper-input label="Téléphone" value="{{user.phone_number}}"></paper-input>
+                </div>
+              </div>
+              <div class="card-actions horizontal layout end-justified">
+                <paper-button on-tap="toggleEdit">{{buttonText}}</paper-button>
+              </div>
+
+            </paper-card>
+
+          </div>
 
       </div>
 
@@ -66,7 +104,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'user-informations'
+      is: 'user-informations',
+
+      properties: {
+        uid: {
+          type: String
+        },
+        user: {
+          type: Object,
+        },
+        edit: {
+          type: Boolean,
+          value: false
+        },
+        buttonText: {
+          type: String,
+          value: "Modifer"
+        }
+      },
+
+      toggleEdit: function () {
+        this.edit = !this.edit;
+        if (this.edit){
+          this.$.infoCard.style.display = "none";
+          this.$.editableInfoCard.style.display = "flex";
+          this.buttonText = "Enregistrer";
+        } else {
+          this.$.infoCard.style.display = "flex";
+          this.$.editableInfoCard.style.display = "none";
+          this.buttonText = "Modifier";
+        }
+      }
 
     });
 
