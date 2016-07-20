@@ -51,6 +51,7 @@
         <app-toolbar>
           <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
           <div title>Mes clients</div>
+          <div class="flex"></div>
           <a href="/clients/add"><paper-icon-button id="addClient" icon="add"></paper-icon-button></a>
         </app-toolbar>
       </app-header>
@@ -61,7 +62,7 @@
         exit-animation="fade-out-animation"
         selected="{{selected}}">
 
-        <clients-list class="full-height" uid="{{uid}}">
+        <clients-list id="clientsList" class="full-height" uid="{{uid}}">
         </clients-list>
         <client-detail id="detail" edit="{{addActive}}" uid="{{uid}}">
         </client-detail>
@@ -119,7 +120,7 @@
           else if (this.addActive){
             this.$.backButton.href = "/clients/list"
             this.$.addClient.style.display = "none";
-            this.$.detail.setClientKey(this.clients.length);
+            this.$.detail.setClientKey(this.$.clientsList.size);
             this.selected = 1;
           }
         }
