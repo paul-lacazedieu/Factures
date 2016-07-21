@@ -3,14 +3,8 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
-
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
-<link rel="import" href="/bower_components/paper-input/paper-input.html">
-<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
-
-<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
 
 <link rel="import" href="/src/shared-styles.html">
 
@@ -25,60 +19,24 @@
         width: 80%;
       }
 
-      #editableInfoCard, #delete {
-        display: none;
-      }
-
     </style>
 
-    <firebase-document
-      app-name="factures"
-      id="document"
-      path="/users/[[uid]]/clients/[[clientKey]]"
-      data="{{client}}">
-    </firebase-document>
-
     <div class="full-height vertical layout center">
-
       <div id="card-container" class="flex horizontal layout center">
 
         <paper-card class="flex">
             <div class="card-content">
-              <div id="infoCard" class="vertical layout">
-                <h2>{{client.name}}</h2>
-                <p>{{client.email}}</p>
-                <p>{{client.address}}</p>
-                <p>{{client.phone_number}}</p>
-              </div>
-
-              <div id="editableInfoCard" class="vertical layout">
-                <paper-input label="Nom" value="{{client.name}}"></paper-input>
-                <paper-input label="E-mail" value="{{client.email}}"></paper-input>
-                <paper-input label="Adresse" value="{{client.address}}"></paper-input>
-                <paper-input label="Téléphone" value="{{client.phone_number}}"></paper-input>
-              </div>
-            </div>
-            <div class="card-actions horizontal layout justified">
-              <span id="spacer" class="flex"></span>
-              <paper-icon-button id="delete" icon="delete" on-tap="openDeleteDialog"></paper-icon-button>
-              <paper-button on-tap="toggleEdit">{{buttonText}}</paper-button>
+            <h2>{{client.name}}</h2>
+            <p>{{client.email}}</p>
+            <p>{{client.address}}</p>
+            <p>{{client.phone_number}}</p>
+            <div class="card-actions horizontal layout end-justified">
+              <a href="/clients/edit/{{key}}"><paper-button>Modifier</paper-button></a>
             </div>
           </paper-card>
 
         </div>
     </div>
-
-    <paper-dialog
-      id="deleteDialog">
-      <h2>Supprimer le client</h2>
-      <paper-dialog-scrollable>
-        Êtes-vous sûr de vouloir supprimer le client {{client.name}}?
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Annuler</paper-button>
-        <paper-button dialog-confirm on-tap="delete">Accepter</paper-button>
-      </div>
-    </paper-dialog>
 
   </template>
 
@@ -89,57 +47,13 @@
       is: 'client-detail',
 
       properties: {
-        clientKey: {
-          type: Number,
-        },
-        uid: {
-          type: String
+        key: {
+          type: Number
         },
         client: {
           type: Object,
         },
-        edit: {
-          type: Boolean,
-          value: false,
-          observer: "editChanged"
-        },
-        buttonText: {
-          type: String,
-          value: "Modifer"
-        }
       },
-
-      setClientKey: function (key){
-        this.clientKey = key;
-      },
-
-      editChanged: function (edit) {
-        if (edit){
-          this.$.infoCard.style.display = "none";
-          this.$.editableInfoCard.style.display = "flex";
-          this.$.spacer.style.display = "none";
-          this.$.delete.style.display = "block";
-          this.buttonText = "Enregistrer";
-        } else {
-          this.$.infoCard.style.display = "flex";
-          this.$.editableInfoCard.style.display = "none";
-          this.$.spacer.style.display = "flex";
-          this.$.delete.style.display = "none";
-          this.buttonText = "Modifier";
-        }
-      },
-
-      toggleEdit: function () {
-        this.edit = !this.edit;
-      },
-
-      openDeleteDialog: function () {
-        this.$.deleteDialog.open();
-      },
-
-      delete: function (){
-        this.$.document.destroy();
-      }
 
     });
   </script>

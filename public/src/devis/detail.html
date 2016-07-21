@@ -1,8 +1,12 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
 
 <link rel="import" href="/src/shared-styles.html">
 
@@ -11,7 +15,6 @@
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
-        /*padding: 10px;*/
       }
 
       .devis-layout {
@@ -53,6 +56,13 @@
       }
     </style>
 
+    <firebase-document
+      app-name="factures"
+      id="client"
+      path="/users/[[uid]]/clients/[[devis.client_key]]"
+      data="{{client}}">
+    </firebase-document>
+
     <div class="vertical layout devis-layout">
 
       <!-- Début en-tête -->
@@ -65,17 +75,22 @@
               <tbody>
                 <tr>
                   <td>
-                    LACAZEDIEU PLOMBERIE
+                    {{user.name}}
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    12 avenue Charles de Gaulle, 81300 Graulhet
+                    {{user.address}}
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    05 63 34 55 03
+                    {{user.email}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{user.phone_number}}
                   </td>
                 </tr>
               </tbody>
@@ -92,17 +107,22 @@
               <tbody>
                 <tr>
                   <td>
-                    Paul LACAZEDIEU
+                    {{client.name}}
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    54 bis avenue Bérénice, 81300 Graulhet
+                    {{client.address}}
                   </td>
                 </tr>
                 <tr>
                   <td>
-                    06 35 12 08 25
+                    {{client.email}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{client.phone_number}}
                   </td>
                 </tr>
               </tbody>
@@ -114,15 +134,15 @@
       <!-- Fin en-tête -->
 
       <!-- Début informations devis -->
-      <paper-card class="devis-info">
+      <paper-card class="devis-info" on-tap="test">
         <div class="card-content horizontal layout">
           <div>
             <p>{{devis.name}}</p>
           </div>
           <div class="flex"></div>
           <div class="vertical layout">
-            <p>Date</p>
-            <p>Heure</p>
+            <p>{{devis.date}}</p>
+            <p>{{devis.hour}}</p>
           </div>
         </div>
       </paper-card>
@@ -236,9 +256,21 @@
       is: 'devis-detail',
 
       properties: {
+        user: {
+          type: Object
+        },
+        client: {
+          type: Object
+        },
         devis: {
           type: Object
         }
+      },
+
+      test: function () {
+        console.log(this.key);
+        console.log(this.devis);
+        console.log(this.client);
       }
     });
   </script>

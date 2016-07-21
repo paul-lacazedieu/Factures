@@ -44,6 +44,13 @@
         }
       },
 
+      getNew: function(){
+        if (this.clients.length){
+          return Number(this.clients[this.clients.length - 1].$key) + 1;
+        }
+        return '0';
+      },
+
       get size(){
         return this.clients.length;
       }

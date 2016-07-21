@@ -3,6 +3,8 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="/bower_components/polymerfire/firebase-query.html">
+
 <link rel="import" href="/src/devis/item.html">
 
 <link rel="import" href="/src/shared-styles.html">
@@ -14,6 +16,13 @@
         display: block;
       }
     </style>
+
+    <firebase-query
+      id="query"
+      app-name="factures"
+      path="/users/[[uid]]/devis"
+      data="{{devis}}">
+    </firebase-query>
 
     <div class="full-height vertical layout list">
       <template is="dom-repeat" items=[[devis]]>
@@ -27,9 +36,23 @@
       is: 'devis-list',
 
       properties: {
+        uid: {
+          type: String
+        },
         devis: {
           type: Array
         }
+      },
+
+      getNew: function(){
+        if (this.devis.length){
+          return Number(this.devis[this.devis.length - 1].$key) + 1;
+        }
+        else return 0;
+      },
+
+      get size(){
+        return this.devis.length;
       }
     });
   </script>

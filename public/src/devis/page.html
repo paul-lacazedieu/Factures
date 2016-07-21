@@ -12,8 +12,11 @@
 <link rel="import" href="/bower_components/app-route/app-location.html">
 <link rel="import" href="/bower_components/app-route/app-route.html">
 
+<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+
 <link rel="import" href="/src/devis/list.html">
 <link rel="import" href="/src/devis/detail.html">
+<link rel="import" href="/src/devis/editor.html">
 
 <link rel="import" href="/src/shared-styles.html">
 
@@ -36,6 +39,31 @@
       data="{{showData}}"
       active="{{showActive}}">
     </app-route>
+    <app-route
+      route="{{route}}"
+      pattern="/edit/:id"
+      data="{{editData}}"
+      active="{{editActive}}">
+    </app-route>
+    <app-route
+      route="{{route}}"
+      pattern="/add"
+      active="{{addActive}}">
+    </app-route>
+
+    <firebase-document
+      app-name="factures"
+      id="devisDoc"
+      path="/users/[[uid]]/devis/[[devisKey]]"
+      data="{{devis}}">
+    </firebase-document>
+
+    <firebase-document
+      app-name="factures"
+      id="userDoc"
+      path="/users/[[uid]]/infos"
+      data="{{user}}">
+    </firebase-document>
 
     <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
@@ -43,6 +71,7 @@
           <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
           <div title>Mes devis</div>
           <div class="flex"></div>
+          <a href="/devis/add"><paper-icon-button id="addDevis" icon="add"></paper-icon-button></a>
         </app-toolbar>
       </app-header>
 
@@ -52,10 +81,9 @@
         exit-animation="fade-out-animation"
         selected="{{selected}}">
 
-        <devis-list class="full-height" devis="{{devis}}">
-        </devis-list>
-        <devis-detail devis="{{selectedDevis}}">
-        </devis-detail>
+        <devis-list id="devisList" class="full-height" uid="{{uid}}"></devis-list>
+        <devis-detail id="detail" uid="{{uid}}" key="{{devisKey}}" user="{{user}}" devis="{{devis}}"></devis-detail>
+        <devis-editor id="editor" uid="{{uid}}" key="{{devisKey}}" user="{{user}}" devis="{{devis}}"></devis-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -66,20 +94,20 @@
       is: 'user-devis',
 
       properties: {
-        devis: {
-          type: Array,
-          value: function(){
-            return [{name: "Devis 1", total: 456, client: "Client Name", ref: 1}, {name: "Devis 2", total: 232, client: "Client Name", ref: 2}, {name: "Devis 3", total: 1056, client: "Client Name", ref: 3}, {name: "Devis 4", total: 369, client: "Client Name", ref: 4}, {name: "Devis 5", total: 30, client: "Client Name", ref: 5}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 6}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 7}, {name: "Devis X", total: "XXX", client: "Client Name", ref: 8}]
-          }
+        uid: {
+          type: String
         },
         route:{
           type: Object,
           observer: '_routeChanged'
         },
-        showData: {
-          type: Object,
+        addActive: {
+          type: Boolean,
         },
         showActive: {
+          type: Boolean,
+        },
+        editActive: {
           type: Boolean,
         },
         listActive: {
@@ -89,24 +117,39 @@
           type: Number,
           value: 0
         },
-        selectedDevis: {
-          type: Object
-        }
+        devisKey: {
+          type: Number,
+          value: -1
+        },
       },
 
       _routeChanged: function (route) {
         if (route && route.prefix == '/devis'){
           if (this.listActive){
             this.selected = 0;
+            this.$.addDevis.style.display = "block";
             this.$.backButton.href = "/homepage"
           }
           else if (this.showActive){
             this.$.backButton.href = "/devis/list"
-            this.selectedDevis = this.devis[this.showData.id - 1];
+            this.devisKey = this.showData.id;
+            this.$.addDevis.style.display = "none";
             this.selected = 1;
+          }
+          else if (this.editActive || this.addActive){
+            this.$.backButton.href = "/devis/list"
+            this.devisKey = (this.editActive == true) ? this.showData.id : this.$.devisList.getNew();
+            this.$.addDevis.style.display = "none";
+            this.selected = 2;
           }
         }
       },
+
+      deleteDevis: function () {
+        this.$.document.destroy();
+        this.set('route.path', '/list');
+        this._routeChanged(this.route);
+      }
     });
   </script>
 </dom-module>
