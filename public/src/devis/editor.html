@@ -3,19 +3,22 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="/bower_components/iron-input/iron-input.html">
+
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="/bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
 
 <link rel="import" href="/src/shared-styles.html">
 
 <dom-module id="devis-editor">
   <template>
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
-    :host {
+      :host {
         display: block;
       }
 
@@ -66,14 +69,295 @@
       }
     </style>
 
-    <h1>EDITOR</h1>
+    <div class="vertical layout devis-layout">
+
+      <!-- Début en-tête -->
+      <div class="horizontal layout entete">
+
+        <!-- Informations Entreprise -->
+        <paper-card heading="{{user.name}}" class="entreprise-info">
+          <div class="card-content">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    {{user.address}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{user.email}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{user.phone_number}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </paper-card>
+
+        <div class="flex"></div>
+
+        <!-- Informations Client -->
+        <paper-card heading="{{client.name}}" class="client-info">
+          <div class="card-content">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    {{client.address}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{client.email}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {{client.phone_number}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card-actions">
+            <paper-button on-tap="selectClient">Selectionner client</paper-button>
+          </div>
+        </paper-card>
+
+      </div>
+      <!-- Fin en-tête -->
+
+      <!-- Début informations devis -->
+      <paper-card class="devis-info" on-tap="test">
+        <div class="card-content horizontal layout">
+          <div>
+            <paper-input label="Name" value="{{tmpDevis.name}}"></paper-input>
+          </div>
+          <div class="flex"></div>
+          <div class="vertical layout">
+            <p>{{tmpDevis.date}}</p>
+            <p>{{tmpDevis.hour}}</p>
+          </div>
+        </div>
+      </paper-card>
+      <!-- Fin informations devis -->
+
+      <!-- Début liste articles -->
+      <paper-card class="articles-list">
+        <div class="vertical layout">
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  Désignation
+                </th>
+                <th>
+                  Quantité
+                </th>
+                <th>
+                  Prix
+                </th>
+                <th>
+                  Total
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template is="dom-repeat" items="{{tmpDevis.articles}}">
+                <tr on-tap="testItem">
+                  <td>
+                    <paper-input label="Désignation" on-keydown="te" value="{{item.des}}"></paper-input>
+                  </td>
+                  <td>
+                    <paper-input label="Quantité" value="{{item.qty}}"></paper-input>
+                  </td>
+                  <td>
+                    <paper-input label="Prix" value="{{item.price}}"></paper-input>
+                  </td>
+                  <td>
+                    <paper-input label="Total" value="{{item.total}}" disabled></paper-input>
+                  </td>
+                </tr>
+              </template>
+              <tr>
+                <td>
+                  <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
+                </td>
+                <td>
+                  <paper-input label="Quantité" value="{{article.qty}}"></paper-input>
+                </td>
+                <td>
+                  <paper-input label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
+                </td>
+                <td>
+                  <paper-input label="Total" value="{{article.total}}" disabled></paper-input>
+                </td>
+              </tbody>
+              </tr>
+          </table>
+        </div>
+        <div class="card-actions horizontal layout end-justified">
+          <p>Total: {{tmpDevis.total}} €</p>
+        </div>
+      </paper-card>
+      <!-- Fin liste articles -->
+
+      <!-- Liste des clients -->
+      <firebase-query
+        id="query"
+        app-name="factures"
+        path="/users/[[uid]]/clients"
+        data="{{clients}}">
+      </firebase-query>
+
+      <paper-dialog
+        id="selectClientDialog">
+        <h2>Choisir un client</h2>
+        <paper-dialog-scrollable>
+          <div class="vertical layout list">
+            <template is="dom-repeat" items="{{clients}}">
+              <div class="item" on-tap="setClient">
+                <p>{{item.name}}</p>
+                <paper-ripple fit></paper-ripple>
+              </div>
+            </template>
+          </div>
+        </paper-dialog-scrollable>
+        <div class="buttons">
+          <paper-button dialog-dismiss>Annuler</paper-button>
+        </div>
+      </paper-dialog>
+      <!-- Fin liste clients -->
+    </div>
 
   </template>
   <script>
     Polymer({
       is: 'devis-editor',
 
+      properties: {
+        uid: {
+          type: String
+        },
+        user: {
+          type: Object
+        },
+        client: {
+          type: Object
+        },
+        clients: {
+          type: Array,
+        },
+        devis: {
+          type: Object
+        },
+        tmpDevis: {
+          type: Object,
+          value: function () {
+            return {
+              name: "Devis n°",
+              client_key: "",
+              date: this.getDate(),
+              hour: this.getHour(),
+              total: 0,
+              articles: [],
+            }
+          }
+        },
+        article: {
+          type: Object,
+          value: function () {
+            return {
+              des: "",
+              qty: 0,
+              price: 0,
+              total: 0
+            }
+          },
+        }
+      },
 
+      observers: [
+        '_change(article.price, article.qty)',
+        '_change(tmpDevis.articles)'
+      ],
+
+      _change: function (price, qty) {
+        this.set ('article.total', price * qty);
+      },
+
+      testItem: function (e) {
+        console.log(e.model.item);
+      },
+
+      te: function (e) {
+        console.log('test');
+        console.log(e);
+      },
+
+      addArticle: function (e) {
+        console.log(e.keyCode);
+        if (e.keyCode === 13 || e.keyCode === 9){
+          this.push('tmpDevis.articles',
+          {
+            des: this.article.des,
+            qty: this.article.qty,
+            price: this.article.price,
+            total: this.article.total
+        });
+        this.article = {};
+        this.$.articleDes.focus();
+        }
+      },
+
+      selectClient: function () {
+        this.$.selectClientDialog.open();
+      },
+
+      setClient: function(e) {
+        this.tmpDevis.client_key = e.model.item.$key;
+        this.client = e.model.item;
+        this.$.selectClientDialog.close();
+      },
+
+      getDate: function () {
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+
+        if (day < 10){
+          day = "0" + day;
+        }
+        if (month < 10){
+          month = "0" + month;
+        }
+        return day+"/"+month+"/"+year;
+      },
+
+      getHour: function () {
+        var d = new Date();
+        var h = d.getHours();
+        var m = d.getMinutes();
+
+        if (h < 10){
+          h = "0" + h;
+        }
+        if (m < 10){
+          m = "0" + m;
+        }
+        return h+":"+m;
+      },
+
+      test: function () {
+        console.log(this.tmpDevis);
+        console.log(this.article);
+      }
     });
   </script>
 </dom-module>
