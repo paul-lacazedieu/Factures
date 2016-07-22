@@ -4,9 +4,11 @@
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <link rel="import" href="/bower_components/iron-input/iron-input.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
 
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 
@@ -165,13 +167,15 @@
                 <th>
                   Total
                 </th>
+                <th>
+                </th>
               </tr>
             </thead>
             <tbody>
               <template is="dom-repeat" items="{{tmpDevis.articles}}">
-                <tr on-tap="testItem">
+                <tr>
                   <td>
-                    <paper-input label="Désignation" on-keydown="te" value="{{item.des}}"></paper-input>
+                    <paper-input label="Désignation" value="{{item.des}}"></paper-input>
                   </td>
                   <td>
                     <paper-input label="Quantité" value="{{item.qty}}"></paper-input>
@@ -180,7 +184,10 @@
                     <paper-input label="Prix" value="{{item.price}}"></paper-input>
                   </td>
                   <td>
-                    <paper-input label="Total" value="{{item.total}}" disabled></paper-input>
+                    <p>{{item.total}}</p>
+                  </td>
+                  <td>
+                    <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
                   </td>
                 </tr>
               </template>
@@ -195,7 +202,10 @@
                   <paper-input label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
                 </td>
                 <td>
-                  <paper-input label="Total" value="{{article.total}}" disabled></paper-input>
+                  <p>{{article.total}}</p>
+                </td>
+                <td>
+                  <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
                 </td>
               </tbody>
               </tr>
@@ -258,50 +268,75 @@
         },
         tmpDevis: {
           type: Object,
-          value: function () {
-            return {
-              name: "Devis n°",
-              client_key: "",
-              date: this.getDate(),
-              hour: this.getHour(),
-              total: 0,
-              articles: [],
-            }
-          }
         },
         article: {
           type: Object,
           value: function () {
             return {
               des: "",
-              qty: 0,
-              price: 0,
+              qty: "",
+              price: "",
               total: 0
             }
           },
+        },
+        articleItemTest: {
+          type: String,
+          value: "tmpDevis.articles.#"
         }
       },
 
       observers: [
-        '_change(article.price, article.qty)',
-        '_change(tmpDevis.articles)'
+        '_changeArticle(article.price, article.qty)',
+        '_changeDevisArticle(tmpDevis.articles.*)'
       ],
 
-      _change: function (price, qty) {
-        this.set ('article.total', price * qty);
+      initialize: function () {
+        this.tmpDevis = {
+          name: "Devis n°"+(Number(this.key)+1),
+          client_key: "",
+          date: this.getDate(),
+          hour: this.getHour(),
+          total: 0,
+          articles: [],
+        };
       },
 
-      testItem: function (e) {
-        console.log(e.model.item);
+      _changeArticle: function (price, qty) {
+        this.set('article.total', price * qty);
       },
 
-      te: function (e) {
-        console.log('test');
-        console.log(e);
+      _changeDevisArticle: function (data) {
+        if (this.articleItemTest === data.path.substr(0, this.articleItemTest.length)){
+          var qty = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".qty");
+          var price = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".price");
+
+          this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", qty * price);
+          this.updateTotal();
+
+          console.log(data);
+        }
+      },
+
+      updateTotal: function (value) {
+        var tmp = 0;
+        if (value){
+          tmp = this.tmpDevis.total + value;
+        }
+        else {
+          this.tmpDevis.articles.forEach(function (item){
+            tmp += item.total;
+          });
+        }
+        this.set('tmpDevis.total', tmp);
+      },
+
+      cancelArticle: function () {
+        this.article = {};
+        this.$.articleDes.focus();
       },
 
       addArticle: function (e) {
-        console.log(e.keyCode);
         if (e.keyCode === 13 || e.keyCode === 9){
           this.push('tmpDevis.articles',
           {
@@ -310,9 +345,24 @@
             price: this.article.price,
             total: this.article.total
         });
+        this.updateTotal(this.article.total);
         this.article = {};
         this.$.articleDes.focus();
         }
+      },
+
+      deleteArticle: function (e) {
+        var tmp = [];
+        if (this.tmpDevis.articles.length > 0){
+          for (var i = this.tmpDevis.articles.length - 1; i >= e.model.index; i--){
+            tmp.push(this.tmpDevis.articles[i]);
+            this.pop('tmpDevis.articles');
+          }
+          for (var i = tmp.length - 2; i >= 0; i--){
+            this.push('tmpDevis.articles', tmp[i]);
+          }
+        }
+        this.updateTotal();
       },
 
       selectClient: function () {

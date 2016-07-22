@@ -139,6 +139,7 @@
           else if (this.editActive || this.addActive){
             this.$.backButton.href = "/devis/list"
             this.devisKey = (this.editActive == true) ? this.showData.id : this.$.devisList.getNew();
+            this.$.editor.initialize();
             this.$.addDevis.style.display = "none";
             this.selected = 2;
           }
