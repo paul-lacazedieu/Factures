@@ -169,81 +169,27 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
+              <template is="dom-repeat" items="{{devis.articles}}">
+                <tr>
+                  <td>
+                    <p>{{item.des}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.qty}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.price}}</p>
+                  </td>
+                  <td>
+                    <p>{{item.total}}</p>
+                  </td>
+                </tr>
+              </template>
             </tbody>
           </table>
         </div>
         <div class="card-actions horizontal layout end-justified">
-          <p>Total: XXX €</p>
+          <p>Total: {{devis.total}} €</p>
         </div>
       </paper-card>
       <!-- Fin liste articles -->

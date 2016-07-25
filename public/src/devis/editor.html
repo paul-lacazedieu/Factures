@@ -71,151 +71,164 @@
       }
     </style>
 
-    <div class="vertical layout devis-layout">
+    <div class="devis-layout">
 
-      <!-- Début en-tête -->
-      <div class="horizontal layout entete">
+      <paper-card class="vertical layout">
 
-        <!-- Informations Entreprise -->
-        <paper-card heading="{{user.name}}" class="entreprise-info">
-          <div class="card-content">
+        <div class="card-content">
+          <!-- Début en-tête -->
+          <div class="horizontal layout entete">
+
+            <!-- Informations Entreprise -->
+            <div class="entreprise-info">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <h2>{{user.name}}</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{user.address}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{user.email}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{user.phone_number}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex"></div>
+
+            <!-- Informations Client -->
+            <div class="client-info">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <h2>{{client.name}}</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{client.address}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{client.email}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{client.phone_number}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <paper-button on-tap="selectClient">Selectionner client</paper-button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Fin en-tête -->
+
+          <!-- Début informations devis -->
+          <div class="horizontal layout devis-info">
+            <div>
+              <paper-input label="Name" value="{{tmpDevis.name}}"></paper-input>
+            </div>
+            <div class="flex"></div>
+            <div class="vertical layout">
+              <p>{{tmpDevis.date}}</p>
+              <p>{{tmpDevis.hour}}</p>
+            </div>
+          </div>
+          <!-- Fin informations devis -->
+
+          <!-- Début liste articles -->
+          <div class="vertical layout articles-list">
             <table>
+              <thead>
+                <tr>
+                  <th>
+                    Désignation
+                  </th>
+                  <th>
+                    Quantité
+                  </th>
+                  <th>
+                    Prix
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                  <th>
+                  </th>
+                </tr>
+              </thead>
               <tbody>
+                <template is="dom-repeat" items="{{tmpDevis.articles}}">
+                  <tr>
+                    <td>
+                      <paper-input label="Désignation" value="{{item.des}}"></paper-input>
+                    </td>
+                    <td>
+                      <paper-input label="Quantité" value="{{item.qty}}"></paper-input>
+                    </td>
+                    <td>
+                      <paper-input label="Prix" value="{{item.price}}"></paper-input>
+                    </td>
+                    <td>
+                      <p>{{item.total}}</p>
+                    </td>
+                    <td>
+                      <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
+                    </td>
+                  </tr>
+                </template>
                 <tr>
                   <td>
-                    {{user.address}}
+                    <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
                   </td>
-                </tr>
-                <tr>
                   <td>
-                    {{user.email}}
+                    <paper-input label="Quantité" value="{{article.qty}}"></paper-input>
                   </td>
-                </tr>
-                <tr>
                   <td>
-                    {{user.phone_number}}
+                    <paper-input label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
+                  </td>
+                  <td>
+                    <p>{{article.total}}</p>
+                  </td>
+                  <td>
+                    <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </paper-card>
-
-        <div class="flex"></div>
-
-        <!-- Informations Client -->
-        <paper-card heading="{{client.name}}" class="client-info">
-          <div class="card-content">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    {{client.address}}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    {{client.email}}
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    {{client.phone_number}}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="horizontal layout end-justified">
+            <p>Total: {{tmpDevis.total}} €</p>
           </div>
-          <div class="card-actions">
-            <paper-button on-tap="selectClient">Selectionner client</paper-button>
-          </div>
-        </paper-card>
-
-      </div>
-      <!-- Fin en-tête -->
-
-      <!-- Début informations devis -->
-      <paper-card class="devis-info" on-tap="test">
-        <div class="card-content horizontal layout">
-          <div>
-            <paper-input label="Name" value="{{tmpDevis.name}}"></paper-input>
-          </div>
-          <div class="flex"></div>
-          <div class="vertical layout">
-            <p>{{tmpDevis.date}}</p>
-            <p>{{tmpDevis.hour}}</p>
-          </div>
+          <!-- Fin liste articles -->
         </div>
+
+        <div class="card-actions horizontal layout center-justified">
+          <paper-button on-tap="save">Enregistrer</paper-button>
+        </div>
+
       </paper-card>
-      <!-- Fin informations devis -->
 
-      <!-- Début liste articles -->
-      <paper-card class="articles-list">
-        <div class="vertical layout">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  Désignation
-                </th>
-                <th>
-                  Quantité
-                </th>
-                <th>
-                  Prix
-                </th>
-                <th>
-                  Total
-                </th>
-                <th>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <template is="dom-repeat" items="{{tmpDevis.articles}}">
-                <tr>
-                  <td>
-                    <paper-input label="Désignation" value="{{item.des}}"></paper-input>
-                  </td>
-                  <td>
-                    <paper-input label="Quantité" value="{{item.qty}}"></paper-input>
-                  </td>
-                  <td>
-                    <paper-input label="Prix" value="{{item.price}}"></paper-input>
-                  </td>
-                  <td>
-                    <p>{{item.total}}</p>
-                  </td>
-                  <td>
-                    <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
-                  </td>
-                </tr>
-              </template>
-              <tr>
-                <td>
-                  <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
-                </td>
-                <td>
-                  <paper-input label="Quantité" value="{{article.qty}}"></paper-input>
-                </td>
-                <td>
-                  <paper-input label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
-                </td>
-                <td>
-                  <p>{{article.total}}</p>
-                </td>
-                <td>
-                  <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
-                </td>
-              </tbody>
-              </tr>
-          </table>
-        </div>
-        <div class="card-actions horizontal layout end-justified">
-          <p>Total: {{tmpDevis.total}} €</p>
-        </div>
-      </paper-card>
-      <!-- Fin liste articles -->
 
       <!-- Liste des clients -->
       <firebase-query
@@ -243,6 +256,7 @@
         </div>
       </paper-dialog>
       <!-- Fin liste clients -->
+
     </div>
 
   </template>
@@ -313,8 +327,6 @@
 
           this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", qty * price);
           this.updateTotal();
-
-          console.log(data);
         }
       },
 
@@ -344,10 +356,10 @@
             qty: this.article.qty,
             price: this.article.price,
             total: this.article.total
-        });
-        this.updateTotal(this.article.total);
-        this.article = {};
-        this.$.articleDes.focus();
+          });
+          this.updateTotal(this.article.total);
+          this.article = {};
+          this.$.articleDes.focus();
         }
       },
 
@@ -402,6 +414,16 @@
           m = "0" + m;
         }
         return h+":"+m;
+      },
+
+      save: function() {
+        this.set('devis.name', this.tmpDevis.name);
+        this.set('devis.date', this.tmpDevis.date);
+        this.set('devis.hour', this.tmpDevis.hour);
+        this.set('devis.client_key', this.tmpDevis.client_key);
+        this.set('devis.articles', this.tmpDevis.articles);
+        this.set('devis.total', this.tmpDevis.total);
+        console.log("saved");
       },
 
       test: function () {
