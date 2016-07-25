@@ -1,0 +1,213 @@
+<link rel="import" href="/bower_components/polymer/polymer.html">
+
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="/bower_components/font-roboto/roboto.html">
+
+<link rel="import" href="/src/shared-styles.html">
+
+<dom-module id="devis-print">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+
+      .devis-layout {
+        font-weight: 300;
+        padding: 10px;
+      }
+
+      .entete {
+        margin-bottom: 15px;
+      }
+
+      .entete .entreprise-info {
+        margin-right: 15px;
+      }
+
+      .devis-info p {
+        margin: 5px 0px;
+      }
+
+      .devis-info {
+        margin-bottom: 15px;
+      }
+
+      .list .item {
+        padding: 10px 5px
+      }
+
+      tr {
+        page-break-inside: avoid;
+      }
+      thead {
+        display: table-header-group;
+      }
+      tfoot {
+        display: table-header-group;
+        font-weight: 300;
+      }
+
+    </style>
+
+    <div class="devis-layout vertical layout" on-tap="test">
+      <!-- Début en-tête -->
+      <div class="horizontal layout entete">
+
+        <!-- Informations Entreprise -->
+        <div class="entreprise-info">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <h2>{{user.name}}</h2>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{user.address}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{user.email}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{user.phone_number}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex"></div>
+
+        <!-- Informations Client -->
+        <div class="client-info">
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <h2>{{client.name}}</h2>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{client.address}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{client.email}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {{client.phone_number}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Fin en-tête -->
+      </div>
+
+      <!-- Début informations devis -->
+      <div class="horizontal layout devis-info">
+        <div>
+          <p>{{devis.name}}</p>
+        </div>
+        <div class="flex"></div>
+        <div class="vertical layout">
+          <p>{{devis.date}}</p>
+          <p>{{devis.hour}}</p>
+        </div>
+      </div>
+      <!-- Fin informations devis -->
+
+      <!-- Début liste articles -->
+      <div class="vertical layout articles-list">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Désignation
+              </th>
+              <th>
+                Quantité
+              </th>
+              <th>
+                Prix
+              </th>
+              <th>
+                Total
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <template is="dom-repeat" items="{{devis.articles}}">
+              <tr>
+                <td>
+                  <p>{{item.des}}</p>
+                </td>
+                <td>
+                  <p>{{item.qty}}</p>
+                </td>
+                <td>
+                  <p>{{item.price}}</p>
+                </td>
+                <td>
+                  <p>{{item.total}}</p>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>
+                <p>Total: {{devis.total}} €</p>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <!-- Fin liste articles -->
+
+    </div>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'devis-print',
+
+      properties: {
+        user: {
+          type: Object
+        },
+        client: {
+          type: Object
+        },
+        devis: {
+          type: Object
+        }
+      },
+
+      test: function () {
+        console.log(this.user);
+        console.log(this.devis);
+        console.log(this.client);
+      }
+    });
+  </script>
+</dom-module>

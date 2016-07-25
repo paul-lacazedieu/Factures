@@ -26,6 +26,19 @@
       :host {
         display: block;
       }
+
+      @media print {
+        app-header {
+          display: none;
+        }
+
+        neon-animated-pages {
+          position: fixed;
+          height: 100vh;
+          width: 100vw;
+        }
+
+      }
     </style>
 
     <app-route
@@ -83,7 +96,7 @@
 
         <devis-list id="devisList" class="full-height" uid="{{uid}}"></devis-list>
         <devis-detail id="detail" uid="{{uid}}" key="{{devisKey}}" user="{{user}}" devis="{{devis}}"></devis-detail>
-        <devis-editor id="editor" uid="{{uid}}" key="{{devisKey}}" user="{{user}}" devis="{{devis}}"></devis-editor>
+        <devis-editor id="editor" uid="{{uid}}" key="{{devisKey}}" user="{{user}}" devis="{{devis}}" on-delete="deleteDevis"></devis-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -147,7 +160,7 @@
       },
 
       deleteDevis: function () {
-        this.$.document.destroy();
+        this.$.devisDoc.destroy();
         this.set('route.path', '/list');
         this._routeChanged(this.route);
       }

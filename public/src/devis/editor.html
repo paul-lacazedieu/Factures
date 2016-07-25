@@ -13,7 +13,6 @@
 <link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
 
 <link rel="import" href="/bower_components/polymerfire/firebase-query.html">
-<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
 
 <link rel="import" href="/src/shared-styles.html">
 
@@ -27,6 +26,10 @@
       .devis-layout {
         font-weight: 300;
         padding: 10px;
+      }
+
+      .devis-layout paper-card {
+        width: 100%;
       }
 
       .entete {
@@ -73,9 +76,9 @@
 
     <div class="devis-layout">
 
-      <paper-card class="vertical layout">
+      <paper-card>
 
-        <div class="card-content">
+        <div class="card-content vertical layout">
           <!-- Début en-tête -->
           <div class="horizontal layout entete">
 
@@ -142,6 +145,7 @@
               </table>
             </div>
             <!-- Fin en-tête -->
+          </div>
 
           <!-- Début informations devis -->
           <div class="horizontal layout devis-info">
@@ -216,14 +220,16 @@
                 </tr>
               </tbody>
             </table>
-          </div>
-          <div class="horizontal layout end-justified">
-            <p>Total: {{tmpDevis.total}} €</p>
+            <div class="horizontal layout end-justified">
+              <p>Total: {{tmpDevis.total}} €</p>
+            </div>
           </div>
           <!-- Fin liste articles -->
+
         </div>
 
-        <div class="card-actions horizontal layout center-justified">
+        <div class="card-actions horizontal layout justified">
+          <paper-button on-tap="delete">Supprimer</paper-button>
           <paper-button on-tap="save">Enregistrer</paper-button>
         </div>
 
@@ -314,6 +320,7 @@
           total: 0,
           articles: [],
         };
+        this.check();
       },
 
       _changeArticle: function (price, qty) {
@@ -416,6 +423,27 @@
         return h+":"+m;
       },
 
+      check: function () {
+        if (this.devis.total){
+          this.set('tmpDevis.total', this.devis.total);
+        }
+        if (this.devis.articles){
+          this.set('tmpDevis.articles', this.devis.articles);
+        }
+        if (this.devis.name){
+          this.set('tmpDevis.name', this.devis.name);
+        }
+        if (this.devis.client_key){
+          this.set('tmpDevis.client_key', this.devis.client_key);
+        }
+        if (this.devis.date){
+          this.set('tmpDevis.date', this.devis.date);
+        }
+        if (this.devis.hour){
+          this.set('tmpDevis.hour', this.devis.hour);
+        }
+      },
+
       save: function() {
         this.set('devis.name', this.tmpDevis.name);
         this.set('devis.date', this.tmpDevis.date);
@@ -423,7 +451,10 @@
         this.set('devis.client_key', this.tmpDevis.client_key);
         this.set('devis.articles', this.tmpDevis.articles);
         this.set('devis.total', this.tmpDevis.total);
-        console.log("saved");
+      },
+
+      delete: function () {
+        this.fire('delete');
       },
 
       test: function () {
