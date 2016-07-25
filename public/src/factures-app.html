@@ -1,22 +1,22 @@
 
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/app-route/app-location.html">
-<link rel="import" href="/bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
 
-<link rel="import" href="/bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="/bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
 
-<link rel="import" href="/bower_components/neon-animation/neon-animated-pages.html">
-<link rel="import" href="/bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="/bower_components/neon-animation/animations/slide-from-left-animation.html">
+<link rel="import" href="../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/slide-from-left-animation.html">
 
-<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="import" href="/bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="/bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="./shared-styles.html">
 
 <link rel="import" href="my-icons.html">
 
@@ -125,7 +125,7 @@
           page = page + "/page";
         }
         this.importHref(
-          this.resolveUrl("http://localhost:8080/src/" + page + '.html'), null, null, true);
+          this.resolveUrl(page + '.html'), null, null, true);
       },
 
       userSignedIn: function () {

@@ -1,11 +1,11 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
 
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="facture-item">
     <template>
@@ -27,15 +27,19 @@
           color: black;
           text-decoration: none;
         }
+
+        .little {
+          font-size: 14px;
+        }
       </style>
 
-      <a href="/factures/show/{{facture.ref}}">
+      <a href="/factures/show/{{facture.$key}}">
         <div class="vertical layout">
           <div class="horizontal layout">
             <p class="flex">{{facture.name}}</p>
             <p>{{facture.total}} €</p>
           </div>
-          <p>{{facture.client}}</p>
+          <p class="little">{{client.name}}</p>
           <paper-ripple fit></paper-ripple>
         </div>
       </a>
@@ -48,6 +52,9 @@
 
         properties: {
           facture: {
+            type: Object
+          },
+          client: {
             type: Object
           }
         }

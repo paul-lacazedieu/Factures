@@ -1,22 +1,29 @@
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/paper-card/paper-card.html">
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="facture-detail">
   <template>
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
         display: block;
-        /*padding: 10px;*/
       }
 
       .facture-layout {
         font-weight: 300;
         padding: 10px;
+      }
+
+      .facture-layout paper-card {
+        width: 100%;
       }
 
       .entete {
@@ -33,6 +40,10 @@
 
       .facture-info {
         margin-bottom: 15px;
+      }
+
+      .list .item {
+        padding: 10px 5px
       }
 
       @media screen and (max-width: 768px) {
@@ -53,180 +64,146 @@
       }
     </style>
 
-    <div class="vertical layout facture-layout">
+    <firebase-document
+      app-name="factures"
+      id="document"
+      path="/users/[[uid]]/clients/[[facture.client_key]]"
+      data="{{client}}">
+    </firebase-document>
 
-      <!-- Début en-tête -->
-      <div class="horizontal layout entete">
+    <div class="facture-layout">
 
-        <!-- Informations Entreprise -->
-        <paper-card class="entreprise-info">
-          <div class="card-content">
+      <paper-card id="facture">
+
+        <div class="card-content vertical layout">
+          <!-- Début en-tête -->
+          <div class="horizontal layout entete">
+
+            <!-- Informations Entreprise -->
+            <div class="entreprise-info">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <h2>{{user.name}}</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{user.address}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{user.email}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{user.phone_number}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex"></div>
+
+            <!-- Informations Client -->
+            <div class="client-info">
+              <table>
+                <tbody>
+                  <tr>
+                    <td>
+                      <h2>{{client.name}}</h2>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{client.address}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{client.email}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      {{client.phone_number}}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Fin en-tête -->
+          </div>
+
+          <!-- Début informations facture -->
+          <div class="horizontal layout facture-info">
+            <div>
+              <p>{{facture.name}}</p>
+            </div>
+            <div class="flex"></div>
+            <div class="vertical layout">
+              <p>{{facture.date}}</p>
+              <p>{{facture.hour}}</p>
+            </div>
+          </div>
+          <!-- Fin informations facture -->
+
+          <!-- Début liste articles -->
+          <div class="vertical layout articles-list">
             <table>
+              <thead>
+                <tr>
+                  <th>
+                    Désignation
+                  </th>
+                  <th>
+                    Quantité
+                  </th>
+                  <th>
+                    Prix
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                </tr>
+              </thead>
               <tbody>
-                <tr>
-                  <td>
-                    LACAZEDIEU PLOMBERIE
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    12 avenue Charles de Gaulle, 81300 Graulhet
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    05 63 34 55 03
-                  </td>
-                </tr>
+                <template is="dom-repeat" items="{{facture.articles}}">
+                  <tr>
+                    <td>
+                      <p>{{item.des}}</p>
+                    </td>
+                    <td>
+                      <p>{{item.qty}}</p>
+                    </td>
+                    <td>
+                      <p>{{item.price}}</p>
+                    </td>
+                    <td>
+                      <p>{{item.total}}</p>
+                    </td>
+                  </tr>
+                </template>
               </tbody>
             </table>
+            <div class="horizontal layout end-justified">
+              <p>Total: {{facture.total}} €</p>
+            </div>
           </div>
-        </paper-card>
+          <!-- Fin liste articles -->
 
-        <div class="flex"></div>
-
-        <!-- Informations client -->
-        <paper-card class="client-info">
-          <div class="card-content">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    Paul LACAZEDIEU
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    54 bis avenue Bérénice, 81300 Graulhet
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    06 35 12 08 25
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </paper-card>
-
-      </div>
-      <!-- Fin en-tête -->
-
-      <!-- Début informations facture -->
-      <paper-card class="facture-info">
-        <div class="card-content horizontal layout">
-          <div>
-            <p>{{facture.name}}</p>
-          </div>
-          <div class="flex"></div>
-          <div class="vertical layout">
-            <p>Date</p>
-            <p>Heure</p>
-          </div>
         </div>
+
+        <div class="card-actions horizontal layout justified">
+          <a href="/factures/edit/{{key}}"><paper-button>Modifier</paper-button></a>
+          <paper-button on-tap="print">Imprimer</paper-button>
+        </div>
+
       </paper-card>
-      <!-- Fin informations facture -->
-
-      <!-- Début liste articles -->
-      <paper-card class="articles-list">
-        <div class="vertical layout">
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  Article
-                </th>
-                <th>
-                  Quantité
-                </th>
-                <th>
-                  Prix
-                </th>
-                <th>
-                  Total
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Article 1
-                </td>
-                <td>
-                  5
-                </td>
-                <td>
-                  25.99 €
-                </td>
-                <td>
-                  129.95 €
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="card-actions horizontal layout end-justified">
-          <p>Total: XXX €</p>
-        </div>
-      </paper-card>
-      <!-- Fin liste articles -->
 
     </div>
 
@@ -236,22 +213,39 @@
       is: 'facture-detail',
 
       properties: {
-        uid: {
-          type: String
+        user: {
+          type: Object
         },
-        factureKey: {
-          type: Number
+        client: {
+          type: Object
         },
         facture: {
           type: Object
         }
       },
 
-      setFactureKey: function (key){
-        this.clientKey = key;
+      print: function () {
+        var myWindow = window.open('', 'Facture', 'height=600,width=1200');
+
+        myWindow.document.write('<html><head><title>Impression facture</title>');
+        myWindow.document.write('<link rel="import" href="./print.html">');
+        myWindow.document.write('<style>body { margin: 0;}</style>');
+        myWindow.document.write('</head><body>');
+        myWindow.document.write('<facture-print id="print" user=\''+ JSON.stringify(this.user) +'\' facture=\''+ JSON.stringify(this.facture) +'\' client=\''+ JSON.stringify(this.client) +'\'></facture-print>');
+        myWindow.document.write('</body></html>');
+
+
+        myWindow.document.close();
+        myWindow.focus();
+
+        return true;
       },
 
-
+      test: function () {
+        console.log(this.key);
+        console.log(this.facture);
+        console.log(this.client);
+      }
     });
   </script>
 </dom-module>

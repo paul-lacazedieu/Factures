@@ -1,14 +1,14 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/bower_components/paper-card/paper-card.html">
-<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="/bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="devis-detail">
   <template>
@@ -228,7 +228,7 @@
         var myWindow = window.open('', 'Devis', 'height=600,width=1200');
 
         myWindow.document.write('<html><head><title>Impression devis</title>');
-        myWindow.document.write('<link rel="import" href="/src/devis/print.html">');
+        myWindow.document.write('<link rel="import" href="./print.html">');
         myWindow.document.write('<style>body { margin: 0;}</style>');
         myWindow.document.write('</head><body>');
         myWindow.document.write('<devis-print id="print" user=\''+ JSON.stringify(this.user) +'\' devis=\''+ JSON.stringify(this.devis) +'\' client=\''+ JSON.stringify(this.client) +'\'></devis-print>');

@@ -1,11 +1,13 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/src/factures/item.html">
+<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="./item.html">
+
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="factures-list">
   <template>
@@ -15,9 +17,16 @@
       }
     </style>
 
+    <firebase-query
+      id="query"
+      app-name="factures"
+      path="/users/[[uid]]/factures"
+      data="{{factures}}">
+    </firebase-query>
+
     <div class="full-height vertical layout list">
       <template is="dom-repeat" items=[[factures]]>
-        <facture-item class="item" facture="{{item}}"></facture-item>
+        <facture-item class="item" facture="{{item}}" client="{{getClient(item)}}"></facture-item>
       </template>
     </div>
 
@@ -27,9 +36,28 @@
       is: 'factures-list',
 
       properties: {
+        uid: {
+          type: String
+        },
         factures: {
           type: Array
         }
+      },
+
+      getClient: function (facture) {
+        console.log(facture);
+        return this.clients[facture.client_key];
+      },
+
+      getNew: function(){
+        if (this.factures.length){
+          return Number(this.factures[this.factures.length - 1].$key) + 1;
+        }
+        else return 0;
+      },
+
+      get size(){
+        return this.factures.length;
       }
     });
   </script>

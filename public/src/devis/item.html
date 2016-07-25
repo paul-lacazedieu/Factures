@@ -1,11 +1,11 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
 
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="devis-item">
     <template>
@@ -27,6 +27,10 @@
           color: black;
           text-decoration: none;
         }
+
+        .little {
+          font-size: 14px;
+        }
       </style>
 
       <a href="/devis/show/{{devis.$key}}">
@@ -35,7 +39,7 @@
             <p class="flex">{{devis.name}}</p>
             <p>{{devis.total}} €</p>
           </div>
-          <p>{{devis.client}}</p>
+          <p class="little">{{client.name}}</p>
           <paper-ripple fit></paper-ripple>
         </div>
       </a>
@@ -47,6 +51,9 @@
 
         properties: {
           devis: {
+            type: Object
+          },
+          client: {
             type: Object
           }
         }

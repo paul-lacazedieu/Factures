@@ -1,20 +1,18 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="/bower_components/iron-input/iron-input.html">
-<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
-<link rel="import" href="/bower_components/paper-card/paper-card.html">
-<link rel="import" href="/bower_components/paper-button/paper-button.html">
-<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="/bower_components/paper-input/paper-input.html">
-<link rel="import" href="/bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
-<link rel="import" href="/bower_components/polymerfire/firebase-query.html">
-
-<link rel="import" href="/src/shared-styles.html">
+<link rel="import" href="../shared-styles.html">
 
 <dom-module id="devis-editor">
   <template>
@@ -237,13 +235,6 @@
 
 
       <!-- Liste des clients -->
-      <firebase-query
-        id="query"
-        app-name="factures"
-        path="/users/[[uid]]/clients"
-        data="{{clients}}">
-      </firebase-query>
-
       <paper-dialog
         id="selectClientDialog">
         <h2>Choisir un client</h2>
@@ -435,6 +426,7 @@
         }
         if (this.devis.client_key){
           this.set('tmpDevis.client_key', this.devis.client_key);
+          this.set('client', this.clients[this.tmpDevis.client_key]);
         }
         if (this.devis.date){
           this.set('tmpDevis.date', this.devis.date);
