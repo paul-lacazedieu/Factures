@@ -1,0 +1,67 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="informations-detail">
+
+  <template>
+
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+
+      #card-container {
+        width: 80%;
+        max-width: 600px;
+      }
+    </style>
+
+    <div class="full-height vertical layout center">
+
+      <div id="card-container" class="flex horizontal layout center">
+
+        <paper-card class="flex">
+            <div class="card-content">
+              <h2>{{user.name}}</h2>
+              <p>{{user.email}}</p>
+              <p>{{user.address}}</p>
+              <p>{{user.phone_number}}</p>
+            </div>
+            <div class="card-actions horizontal layout end-justified">
+              <a href="/informations/edit"><paper-button>Modifier</paper-button></a>
+            </div>
+
+          </paper-card>
+
+        </div>
+
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'informations-detail',
+
+      properties: {
+        user: {
+          type: Object,
+        },
+      },
+    });
+
+  </script>
+
+</dom-module>

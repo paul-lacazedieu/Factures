@@ -103,7 +103,7 @@
 
         <devis-list id="devisList" class="full-height" clients="{{clients}}" uid="{{uid}}"></devis-list>
         <devis-detail id="detail" key="{{devisKey}}" clients="{{clients}}" user="{{user}}" devis="{{devis}}"></devis-detail>
-        <devis-editor id="editor" key="{{devisKey}}" clients="{{clients}}" user="{{user}}" devis="{{devis}}" on-delete="deleteDevis"></devis-editor>
+        <devis-editor id="editor" key="{{devisKey}}" clients="{{clients}}" user="{{user}}" devis="{{devis}}" on-delete="deleteDevis" on-save="showDevis"></devis-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -164,6 +164,11 @@
             this.selected = 2;
           }
         }
+      },
+
+      showDevis: function () {
+        this.set('route.path', '/show/'+this.devisKey);
+        this._routeChanged(this.route);
       },
 
       deleteDevis: function () {

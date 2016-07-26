@@ -1,6 +1,6 @@
 <link rel="import" href="./shared-styles.html">
 
-<dom-module id="user-clients">
+<dom-module id="user-prestations">
   <template>
     <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
       :host {
@@ -9,111 +9,22 @@
 
     </style>
 
-    <app-route
-      route="{{route}}"
-      pattern="/list"
-      active="{{listActive}}">
-    </app-route>
-    <app-route
-      route="{{route}}"
-      pattern="/show/:id"
-      data="{{showData}}"
-      active="{{showActive}}">
-    </app-route>
-    <app-route
-      route="{{route}}"
-      pattern="/add"
-      active="{{addActive}}">
-    </app-route>
-
-    <firebase-query
-      id="query"
-      app-name="factures"
-      path="/users/[[uid]]/clients"
-      data="{{clients}}">
-    </firebase-query>
-
     <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
           <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
-          <div title>Mes clients</div>
-          <a href="/clients/add"><paper-icon-button id="addClient" icon="add"></paper-icon-button></a>
+          <div title>Mes prestations</div>
         </app-toolbar>
       </app-header>
 
-      <neon-animated-pages
-        class="full-height"
-        entry-animation="slide-from-left-animation"
-        exit-animation="fade-out-animation"
-        selected="{{selected}}">
-
-        <clients-list class="full-height" clients="{{clients}}">
-        </clients-list>
-        <client-detail id="detail" edit="{{addActive}}" uid="{{uid}}">
-        </client-detail>
-
-      </neon-animated-pages>
     </app-header-layout>
 
   </template>
   <script>
     Polymer({
 
-      is: 'user-clients',
-      properties: {
-        uid: {
-          type: String
-        },
-        clients: {
-          type: Array,
-        },
-        route:{
-          type: Object,
-          observer: '_routeChanged'
-        },
-        showData: {
-          type: Object,
-        },
-        addActive: {
-          type: Boolean,
-        },
-        showActive: {
-          type: Boolean,
-        },
-        listActive: {
-          type: Boolean,
-        },
-        selected: {
-          type: Number,
-          value: 0
-        },
-        clientKey: {
-          type: Number
-        },
-      },
+      is: 'user-prestations',
 
-      _routeChanged: function (route) {
-        if (route && route.prefix == '/clients'){
-          if (this.listActive){
-            this.selected = 0;
-            this.$.addClient.style.display = "block";
-            this.$.backButton.href = "/homepage"
-          }
-          else if (this.showActive){
-            this.$.backButton.href = "/clients/list"
-            this.$.detail.setClientKey(this.showData.id);
-            this.$.addClient.style.display = "none";
-            this.selected = 1;
-          }
-          else if (this.addActive){
-            this.$.backButton.href = "/clients/list"
-            this.$.addClient.style.display = "none";
-            this.$.detail.setClientKey(this.clients.length);
-            this.selected = 1;
-          }
-        }
-      },
     });
   </script>
 </dom-module>

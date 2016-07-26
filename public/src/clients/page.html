@@ -80,7 +80,7 @@
 
         <clients-list id="clientsList" class="full-height" uid="{{uid}}"></clients-list>
         <client-detail id="detail" key="{{clientKey}}" client="{{client}}"></client-detail>
-        <client-editor id="editor" on-delete-client="deleteClient" key="{{clientKey}}" client="{{client}}"></client-editor>
+        <client-editor id="editor" on-delete-client="deleteClient" key="{{clientKey}}" client="{{client}}" on-save="showClient"></client-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -141,6 +141,12 @@
           }
         }
       },
+
+      showClient: function () {
+        this.set('route.path', '/show/'+this.clientKey);
+        this._routeChanged(this.route);
+      },
+
 
       deleteClient: function () {
         this.$.document.destroy();

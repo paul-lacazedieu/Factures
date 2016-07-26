@@ -64,13 +64,6 @@
       }
     </style>
 
-    <firebase-document
-      app-name="factures"
-      id="document"
-      path="/users/[[uid]]/clients/[[devis.client_key]]"
-      data="{{client}}">
-    </firebase-document>
-
     <div class="devis-layout">
 
       <paper-card id="devis">
@@ -175,24 +168,29 @@
                 <template is="dom-repeat" items="{{devis.articles}}">
                   <tr>
                     <td>
-                      <p>{{item.des}}</p>
+                      {{item.des}}
                     </td>
                     <td>
-                      <p>{{item.qty}}</p>
+                      {{item.qty}}
                     </td>
                     <td>
-                      <p>{{item.price}}</p>
+                      {{item.price}}
                     </td>
                     <td>
-                      <p>{{item.total}}</p>
+                      {{item.total}}
                     </td>
                   </tr>
                 </template>
               </tbody>
+              <tfoot>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  Total: {{devis.total}} €
+                </td>
+              </tfoot>
             </table>
-            <div class="horizontal layout end-justified">
-              <p>Total: {{devis.total}} €</p>
-            </div>
           </div>
           <!-- Fin liste articles -->
 
@@ -224,6 +222,16 @@
         }
       },
 
+      observers: [
+        '_clientChanged(devis.client_key)'
+      ],
+
+      _clientChanged: function (key){
+        if (key){
+          this.client = this.clients[key];
+        }
+      },
+
       print: function () {
         var myWindow = window.open('', 'Devis', 'height=600,width=1200');
 
@@ -241,11 +249,6 @@
         return true;
       },
 
-      test: function () {
-        console.log(this.key);
-        console.log(this.devis);
-        console.log(this.client);
-      }
     });
   </script>
 </dom-module>

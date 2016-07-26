@@ -58,7 +58,7 @@
         <user-factures id="factures" class="full-height" route="{{subroute}}" name="factures" uid="{{user.uid}}"></user-factures>
         <user-devis id="devis" class="full-height" route="{{subroute}}" name="devis" uid="{{user.uid}}"></user-devis>
         <user-prestations id="prestations" class="full-height" name="prestations" uid="{{user.uid}}"></user-prestations>
-        <user-informations id="informations" class="full-height" name="informations" uid="{{user.uid}}"></user-informations>
+        <user-informations id="informations" class="full-height" route="{{subroute}}" name="informations" uid="{{user.uid}}"></user-informations>
         <error-page class="full-height" name="404"></error-page>
       </neon-animated-pages>
     </div>
@@ -87,7 +87,7 @@
         directoryList: {
           type: Array,
           value: function (){
-            return ['devis', 'factures', 'clients']//'factures', 'clients', 'devis', 'informations', 'prestations'
+            return ['devis', 'factures', 'clients', 'informations']//'factures', 'clients', 'devis', 'prestations'
           }
         },
         user: {

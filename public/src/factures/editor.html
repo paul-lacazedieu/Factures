@@ -10,11 +10,11 @@
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
-<link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
+<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
 
 <link rel="import" href="../shared-styles.html">
+<link rel="import" href="../utils/date-utils.html">
 
 <dom-module id="facture-editor">
   <template>
@@ -52,8 +52,8 @@
         padding: 10px 5px
       }
 
-      #selectClientDialog {
-        padding: 0px 15px;
+      .scroll-region {
+        max-height: 400px;
       }
 
       @media screen and (max-width: 768px) {
@@ -73,6 +73,8 @@
         }
       }
     </style>
+
+    <date-utils id="dateUtils"></date-utils>
 
     <div class="facture-layout">
 
@@ -118,7 +120,13 @@
                 <tbody>
                   <tr>
                     <td>
-                      <h2>{{client.name}}</h2>
+                      <vaadin-combo-box
+                        Label="Client"
+                        items=[[clients]]
+                        item-label-path="name"
+                        item-value-path="$key"
+                        on-value-changed="clientValueChanged">
+                      </vaadin-combo-box>
                     </td>
                   </tr>
                   <tr>
@@ -177,8 +185,6 @@
                   <th>
                     Total
                   </th>
-                  <th>
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -188,15 +194,13 @@
                       <paper-input label="Désignation" value="{{item.des}}"></paper-input>
                     </td>
                     <td>
-                      <paper-input label="Quantité" value="{{item.qty}}"></paper-input>
+                      <paper-input type="number" label="Quantité" value="{{item.qty}}"></paper-input>
                     </td>
                     <td>
-                      <paper-input label="Prix" value="{{item.price}}"></paper-input>
+                      <paper-input type="number" label="Prix" value="{{item.price}}"></paper-input>
                     </td>
                     <td>
-                      <p>{{item.total}}</p>
-                    </td>
-                    <td>
+                      {{item.total}}
                       <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
                     </td>
                   </tr>
@@ -206,23 +210,26 @@
                     <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
                   </td>
                   <td>
-                    <paper-input label="Quantité" value="{{article.qty}}"></paper-input>
+                    <paper-input type="number" label="Quantité" value="{{article.qty}}"></paper-input>
                   </td>
                   <td>
-                    <paper-input label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
+                    <paper-input type="number" label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
                   </td>
                   <td>
-                    <p>{{article.total}}</p>
-                  </td>
-                  <td>
+                    {{article.total}}
                     <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
                   </td>
                 </tr>
               </tbody>
+              <tfoot>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                  Total: {{tmpFacture.total}} €
+                </td>
+              </tfoot>
             </table>
-            <div class="horizontal layout end-justified">
-              <p>Total: {{tmpFacture.total}} €</p>
-            </div>
           </div>
           <!-- Fin liste articles -->
 
@@ -234,28 +241,6 @@
         </div>
 
       </paper-card>
-
-
-      <!-- Liste des clients -->
-      <paper-dialog
-        id="selectClientDialog">
-        <h2>Choisir un client</h2>
-        <paper-dialog-scrollable>
-          <div class="vertical layout list">
-            <template is="dom-repeat" items="{{clients}}">
-              <div class="item" on-tap="setClient">
-                <p>{{item.name}}</p>
-                <paper-ripple fit></paper-ripple>
-              </div>
-            </template>
-          </div>
-        </paper-dialog-scrollable>
-        <div class="buttons">
-          <paper-button dialog-dismiss>Annuler</paper-button>
-        </div>
-      </paper-dialog>
-      <!-- Fin liste clients -->
-
     </div>
 
   </template>
@@ -308,8 +293,8 @@
         this.tmpFacture = {
           name: "Facture n°"+(Number(this.key)+1),
           client_key: "",
-          date: this.getDate(),
-          hour: this.getHour(),
+          date: this.$.dateUtils.getDate(),
+          hour: this.$.dateUtils.getTime(),
           total: 0,
           articles: [],
         };
@@ -317,7 +302,7 @@
       },
 
       _changeArticle: function (price, qty) {
-        this.set('article.total', price * qty);
+        this.set('article.total', Math.round(price * qty * 100) / 100);
       },
 
       _changeFactureArticle: function (data) {
@@ -325,7 +310,7 @@
           var qty = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".qty");
           var price = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".price");
 
-          this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", qty * price);
+          this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", Math.round(price * qty * 100) / 100);
           this.updateTotal();
         }
       },
@@ -340,7 +325,7 @@
             tmp += item.total;
           });
         }
-        this.set('tmpFacture.total', tmp);
+        this.set('tmpFacture.total', Math.round(tmp * 100) / 100);
       },
 
       cancelArticle: function () {
@@ -377,43 +362,15 @@
         this.updateTotal();
       },
 
-      selectClient: function () {
-        this.$.selectClientDialog.open();
+      setClient: function(key) {
+        this.tmpFacture.client_key = key;
+        this.client = this.clients[key];
       },
 
-      setClient: function(e) {
-        this.tmpFacture.client_key = e.model.item.$key;
-        this.client = e.model.item;
-        this.$.selectClientDialog.close();
-      },
-
-      getDate: function () {
-        var d = new Date();
-        var day = d.getDate();
-        var month = d.getMonth() + 1;
-        var year = d.getFullYear();
-
-        if (day < 10){
-          day = "0" + day;
+      clientValueChanged: function(event) {
+        if (event.detail.value){
+          this.setClient(event.detail.value);
         }
-        if (month < 10){
-          month = "0" + month;
-        }
-        return day+"/"+month+"/"+year;
-      },
-
-      getHour: function () {
-        var d = new Date();
-        var h = d.getHours();
-        var m = d.getMinutes();
-
-        if (h < 10){
-          h = "0" + h;
-        }
-        if (m < 10){
-          m = "0" + m;
-        }
-        return h+":"+m;
       },
 
       check: function () {
@@ -447,6 +404,7 @@
         this.set('facture.client_key', this.tmpFacture.client_key);
         this.set('facture.articles', this.tmpFacture.articles);
         this.set('facture.total', this.tmpFacture.total);
+        this.fire('save');
       },
 
       delete: function () {

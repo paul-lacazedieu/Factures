@@ -1,0 +1,101 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="informations-editor">
+
+  <template>
+
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+
+      #card-container {
+        width: 80%;
+        max-width: 600px;
+      }
+    </style>
+
+    <div class="full-height vertical layout center">
+
+      <div id="card-container" class="flex horizontal layout center">
+
+        <paper-card class="flex">
+            <div class="card-content">
+              <paper-input label="Nom" value="{{tmpUser.name}}"></paper-input>
+              <paper-input label="E-mail" value="{{tmpUser.email}}"></paper-input>
+              <paper-input label="Adresse" value="{{tmpUser.address}}"></paper-input>
+              <paper-input label="Téléphone" value="{{tmpUser.phone_number}}"></paper-input>
+            </div>
+            <div class="card-actions horizontal layout end-justified">
+              <paper-button on-tap="save">Enregistrer</paper-button>
+            </div>
+
+          </paper-card>
+
+        </div>
+
+    </div>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'informations-editor',
+
+      properties: {
+        user: {
+          type: Object,
+        },
+        tmpUser: {
+          type: Object,
+          value: {
+            name: "",
+            address: "",
+            phone_number: "",
+            email: ""
+          }
+        },
+      },
+
+      initialize: function () {
+        if (this.user.name){
+          this.set('tmpUser.name', this.user.name);
+        }
+        if (this.user.address){
+          this.set('tmpUser.address', this.user.address);
+        }
+        if (this.user.phone_number){
+          this.set('tmpUser.phone_number', this.user.phone_number);
+        }
+        if (this.user.email){
+          this.set('tmpUser.email', this.user.email);
+        }
+      },
+
+      save: function () {
+        this.set('user.name', this.tmpUser.name);
+        this.set('user.address', this.tmpUser.address);
+        this.set('user.phone_number', this.tmpUser.phone_number);
+        this.set('user.email', this.tmpUser.email);
+        this.fire('saved');
+      }
+    });
+
+  </script>
+
+</dom-module>

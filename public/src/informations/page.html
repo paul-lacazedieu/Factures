@@ -1,0 +1,135 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/neon-animation/neon-animated-pages.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../../bower_components/neon-animation/animations/slide-from-left-animation.html">
+
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<link rel="import" href="./detail.html">
+<link rel="import" href="./editor.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="user-informations">
+
+  <template>
+
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+    </style>
+
+    <app-route
+      route="{{route}}"
+      pattern="/show"
+      active="{{showActive}}">
+    </app-route>
+    <app-route
+      route="{{route}}"
+      pattern="/edit"
+      active="{{editActive}}">
+    </app-route>
+
+    <firebase-document
+      app-name="factures"
+      path="/users/{{uid}}/infos"
+      data="{{user}}">
+    </firebase-document>
+
+    <app-header-layout class="full-height" has-scrolling-region>
+      <app-header condenses reveals effects="waterfall">
+        <app-toolbar>
+          <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
+          <div title>Mes informations</div>
+          <div class="flex"></div>
+        </app-toolbar>
+      </app-header>
+      <neon-animated-pages
+        class="full-height"
+        entry-animation="slide-from-left-animation"
+        exit-animation="fade-out-animation"
+        selected="{{selected}}">
+
+        <informations-detail id="detail" user="{{user}}"></informations-detail>
+        <informations-editor id="editor" user="{{user}}" on-save="showInformations"></informations-editor>
+
+      </neon-animated-pages>
+
+
+    </app-header-layout>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'user-informations',
+
+      properties: {
+        uid: {
+          type: String
+        },
+        route:{
+          type: Object,
+          observer: '_routeChanged'
+        },
+        showActive: {
+          type: Boolean,
+        },
+        editActive: {
+          type: Boolean,
+        },
+        user: {
+          type: Object,
+        },
+        selected: {
+          type: Number,
+          value: 0
+        }
+      },
+
+      ready: function () {
+        console.log('ready');
+      },
+
+      _routeChanged: function (route) {
+        if (route && route.prefix == '/informations'){
+          if (this.showActive){
+            this.$.backButton.href = "/homepage"
+            this.selected = 0;
+          }
+          else if (this.editActive){
+            this.$.editor.initialize();
+            this.$.backButton.href = "/informations/show"
+            this.selected = 1;
+          }
+        }
+      },
+
+      showInformations: function () {
+        this.set('route.path', '/informations/show');
+      }
+
+    });
+
+  </script>
+
+</dom-module>

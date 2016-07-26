@@ -103,7 +103,7 @@
 
         <factures-list id="facturesList" class="full-height" uid="{{uid}}" clients="{{clients}}"></factures-list>
         <facture-detail id="detail" key="{{factureKey}}" clients="{{clients}}" user="{{user}}" facture="{{facture}}"></facture-detail>
-        <facture-editor id="editor" key="{{factureKey}}" clients="{{clients}}" user="{{user}}" facture="{{facture}}" on-delete="deleteFacture"></facture-editor>
+        <facture-editor id="editor" key="{{factureKey}}" clients="{{clients}}" user="{{user}}" facture="{{facture}}" on-delete="deleteFacture" on-save="showFacture"></facture-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -164,6 +164,11 @@
             this.selected = 2;
           }
         }
+      },
+
+      showFacture: function () {
+        this.set('route.path', '/show/'+this.factureKey);
+        this._routeChanged(this.route);
       },
 
       deleteFacture: function () {
