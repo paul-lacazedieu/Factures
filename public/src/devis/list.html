@@ -24,10 +24,16 @@
       data="{{devis}}">
     </firebase-query>
 
-    <div class="full-height vertical layout list">
-      <template is="dom-repeat" items=[[devis]]>
-        <devis-item class="item" devis="{{item}}" client="{{getClient(item)}}"></devis-item>
-      </template>
+    <div class="vertical layout">
+      <div class="horizontal layout center-justified">
+        <paper-input label="Rechercher" value="{{searchString}}"></paper-input>
+      </div>
+      <div class="list">
+        <template is="dom-repeat" items=[[devis]]
+          filter="{{computeFilter(searchString)}}">
+          <devis-item class="item" devis="{{item}}" client="{{getClient(item)}}"></devis-item>
+        </template>
+      </div>
     </div>
 
   </template>
@@ -41,6 +47,22 @@
         },
         devis: {
           type: Array
+        }
+      },
+
+      computeFilter: function(string) {
+        var self = this;
+        if (!string) {
+          // set filter to null to disable filtering
+          return null;
+        } else {
+          // return a filter function for the current search string
+          string = string.toLowerCase();
+          return function(item) {
+            var name = item.name.toLowerCase();
+            var client_name = self.clients[item.client_key].name.toLowerCase();
+            return (name.indexOf(string) != -1 || client_name.indexOf(string) != -1);
+          };
         }
       },
 

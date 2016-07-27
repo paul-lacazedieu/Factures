@@ -5,6 +5,8 @@
 
 <link rel="import" href="../../bower_components/polymerfire/firebase-query.html">
 
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+
 <link rel="import" href="./item.html">
 
 <link rel="import" href="../shared-styles.html">
@@ -24,10 +26,16 @@
       data="{{clients}}">
     </firebase-query>
 
-    <div class="full-height vertical layout list">
-      <template is="dom-repeat" items={{clients}}>
-        <client-item class="item" client="{{item}}"></client-item>
-      </template>
+    <div class="vertical layout">
+      <div class="horizontal layout center-justified">
+        <paper-input label="Rechercher" value="{{searchString}}"></paper-input>
+      </div>
+      <div class="list">
+        <template is="dom-repeat" items={{clients}}
+          filter="{{computeFilter(searchString)}}">
+          <client-item class="item" client="{{item}}"></client-item>
+        </template>
+      </div>
     </div>
 
   </template>
@@ -41,6 +49,22 @@
         },
         clients: {
           type: Array
+        }
+      },
+
+      computeFilter: function(string) {
+        if (!string) {
+          // set filter to null to disable filtering
+          return null;
+        } else {
+          // return a filter function for the current search string
+          string = string.toLowerCase();
+          return function(item) {
+            var name = item.name.toLowerCase();
+            var email = item.email.toLowerCase();
+            var phone = item.phone_number.replace(/ /g, '').toLowerCase();
+            return (name.indexOf(string) != -1 || email.indexOf(string) != -1 || phone.indexOf(string) != -1);
+          };
         }
       },
 

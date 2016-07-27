@@ -11,10 +11,9 @@
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
-<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
-
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../utils/date-utils.html">
+<link rel="import" href="../utils/piece-header.html">
 
 <dom-module id="devis-editor">
   <template>
@@ -47,27 +46,6 @@
       .devis-info {
         margin-bottom: 15px;
       }
-
-      .list .item {
-        padding: 10px 5px
-      }
-
-      @media screen and (max-width: 768px) {
-        .horizontal.layout.entete {
-          display: inline-block;
-        }
-        .entreprise-info {
-          margin-right: 0px;
-          margin-bottom: 15px;
-          width: 100%;
-          float: left;
-        }
-
-        .client-info {
-          width: 100%;
-          float: left;
-        }
-      }
     </style>
 
     <date-utils id="dateUtils"></date-utils>
@@ -77,74 +55,18 @@
       <paper-card>
 
         <div class="card-content vertical layout">
+
           <!-- Début en-tête -->
-          <div class="horizontal layout entete">
+          <piece-header
+            id="header"
+            editable
+            clients="{{clients}}"
+            client="{{client}}"
+            user="{{user}}"
+            on-client-changed="_clientChanged">
+          </piece-header>
+          <!-- Fin en-tête -->
 
-            <!-- Informations Entreprise -->
-            <div class="entreprise-info">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <h2>{{user.name}}</h2>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{user.address}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{user.email}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{user.phone_number}}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="flex"></div>
-
-            <!-- Informations Client -->
-            <div class="client-info">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <vaadin-combo-box
-                        Label="Client"
-                        items=[[clients]]
-                        item-label-path="name"
-                        item-value-path="$key"
-                        on-value-changed="clientValueChanged">
-                      </vaadin-combo-box>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{client.address}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{client.email}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{client.phone_number}}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- Fin en-tête -->
-          </div>
 
           <!-- Début informations devis -->
           <div class="horizontal layout devis-info">
@@ -285,6 +207,13 @@
           articles: [],
         };
         this.check();
+        this.$.header.initialize();
+      },
+
+      _clientChanged: function () {
+        if (this.$.header.client){
+          this.tmpDevis.client_key = this.$.header.client.$key;
+        }
       },
 
       _changeArticle: function (price, qty) {
@@ -346,18 +275,6 @@
           }
         }
         this.updateTotal();
-      },
-
-
-      setClient: function(key) {
-        this.tmpDevis.client_key = key;
-        this.client = this.clients[key];
-      },
-
-      clientValueChanged: function(event) {
-        if (event.detail.value){
-          this.setClient(event.detail.value);
-        }
       },
 
       check: function () {

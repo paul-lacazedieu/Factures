@@ -9,6 +9,7 @@
 <link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
 
 <link rel="import" href="../shared-styles.html">
+<link rel="import" href="../utils/piece-header.html">
 
 <dom-module id="devis-detail">
   <template>
@@ -69,68 +70,15 @@
       <paper-card id="devis">
 
         <div class="card-content vertical layout">
+
           <!-- Début en-tête -->
-          <div class="horizontal layout entete">
-
-            <!-- Informations Entreprise -->
-            <div class="entreprise-info">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <h2>{{user.name}}</h2>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{user.address}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{user.email}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{user.phone_number}}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="flex"></div>
-
-            <!-- Informations Client -->
-            <div class="client-info">
-              <table>
-                <tbody>
-                  <tr>
-                    <td>
-                      <h2>{{client.name}}</h2>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{client.address}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{client.email}}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      {{client.phone_number}}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- Fin en-tête -->
-          </div>
+          <piece-header
+            id="header"
+            clients="{{clients}}"
+            client="{{client}}"
+            user="{{user}}">
+          </piece-header>
+          <!-- Fin en-tête -->
 
           <!-- Début informations devis -->
           <div class="horizontal layout devis-info">

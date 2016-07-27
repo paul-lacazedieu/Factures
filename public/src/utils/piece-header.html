@@ -1,0 +1,146 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/vaadin-combo-box/vaadin-combo-box.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="piece-header">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+
+      @media screen and (max-width: 768px) {
+        .horizontal.layout.entete {
+          display: inline-block;
+        }
+        .entreprise-info {
+          margin-right: 0px;
+          margin-bottom: 15px;
+          width: 100%;
+          float: left;
+        }
+
+        .client-info {
+          width: 100%;
+          float: left;
+        }
+      }
+    </style>
+
+    <!-- Début en-tête -->
+    <div class="horizontal layout entete">
+
+      <!-- Informations Entreprise -->
+      <div class="entreprise-info">
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <h2>{{user.name}}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{user.address}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{user.email}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{user.phone_number}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex"></div>
+
+      <!-- Informations Client -->
+      <div class="client-info">
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <vaadin-combo-box
+                  id="comboBox"
+                  hidden$="{{!editable}}"
+                  Label="Client"
+                  items=[[clients]]
+                  item-label-path="name"
+                  item-value-path="$key"
+                  on-value-changed="clientValueChanged">
+                </vaadin-combo-box>
+                <h2 hidden$="{{editable}}">{{client.name}}</h2>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{client.address}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{client.email}}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                {{client.phone_number}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Fin en-tête -->
+
+  </template>
+  <script>
+    Polymer({
+      is: 'piece-header',
+
+      properties: {
+        clients: {
+          type: Array
+        },
+        client: {
+          type: Object,
+        },
+        editable: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      initialize: function () {
+        if (this.client){
+          console.log(this.client);
+          this.$.comboBox.value = this.client.$key;
+        }
+      },
+
+      clientValueChanged: function(event) {
+        if (event.detail.value && event.detail.value != this.client.$key){
+          this.client = this.clients[event.detail.value];
+          console.log('fire');
+          this.fire('client-changed')
+        }
+      },
+
+      get client(){
+        return this.client;
+      }
+
+    })
+  </script>
+</dom-module>
