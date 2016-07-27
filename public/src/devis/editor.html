@@ -3,17 +3,14 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="../../bower_components/iron-input/iron-input.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../utils/date-utils.html">
 <link rel="import" href="../utils/piece-header.html">
+<link rel="import" href="../utils/table-articles.html">
 
 <dom-module id="devis-editor">
   <template>
@@ -82,63 +79,7 @@
           <!-- Fin informations devis -->
 
           <!-- Début liste articles -->
-          <div class="vertical layout articles-list">
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Désignation
-                  </th>
-                  <th>
-                    Quantité
-                  </th>
-                  <th>
-                    Prix
-                  </th>
-                  <th>
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <template is="dom-repeat" items="{{tmpDevis.articles}}">
-                  <tr>
-                    <td>
-                      <paper-input label="Désignation" value="{{item.des}}"></paper-input>
-                    </td>
-                    <td>
-                      <paper-input type="number" label="Quantité" value="{{item.qty}}"></paper-input>
-                    </td>
-                    <td>
-                      <paper-input type="number" label="Prix" value="{{item.price}}"></paper-input>
-                    </td>
-                    <td>
-                      {{item.total}}
-                      <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
-                    </td>
-                  </tr>
-                </template>
-                <tr>
-                  <td>
-                    <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
-                  </td>
-                  <td>
-                    <paper-input type="number" label="Quantité" value="{{article.qty}}"></paper-input>
-                  </td>
-                  <td>
-                    <paper-input type="number" label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
-                  </td>
-                  <td>
-                    {{article.total}}
-                    <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="horizontal layout end-justified">
-              <p>Total: {{tmpDevis.total}} €</p>
-            </div>
-          </div>
+          <table-articles id="articles" editable articles="{{tmpDevis.articles}}" total="{{tmpDevis.total}}"></table-articles>
           <!-- Fin liste articles -->
 
         </div>
@@ -157,9 +98,6 @@
       is: 'devis-editor',
 
       properties: {
-        uid: {
-          type: String
-        },
         user: {
           type: Object
         },
@@ -175,27 +113,7 @@
         tmpDevis: {
           type: Object,
         },
-        article: {
-          type: Object,
-          value: function () {
-            return {
-              des: "",
-              qty: "",
-              price: "",
-              total: 0
-            }
-          },
-        },
-        articleItemTest: {
-          type: String,
-          value: "tmpDevis.articles.#"
-        }
       },
-
-      observers: [
-        '_changeArticle(article.price, article.qty)',
-        '_changeDevisArticle(tmpDevis.articles.*)'
-      ],
 
       initialize: function () {
         this.tmpDevis = {
@@ -208,73 +126,13 @@
         };
         this.check();
         this.$.header.initialize();
+        this.$.articles.initialize();
       },
 
       _clientChanged: function () {
         if (this.$.header.client){
           this.tmpDevis.client_key = this.$.header.client.$key;
         }
-      },
-
-      _changeArticle: function (price, qty) {
-        this.set('article.total', Math.round(price * qty * 100) / 100);
-      },
-
-      _changeDevisArticle: function (data) {
-        if (this.articleItemTest === data.path.substr(0, this.articleItemTest.length)){
-          var qty = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".qty");
-          var price = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".price");
-
-          this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", Math.round(price * qty * 100) / 100);
-          this.updateTotal();
-        }
-      },
-
-      updateTotal: function (value) {
-        var tmp = 0;
-        if (value){
-          tmp = this.tmpDevis.total + value;
-        }
-        else {
-          this.tmpDevis.articles.forEach(function (item){
-            tmp += item.total;
-          });
-        }
-        this.set('tmpDevis.total', Math.round(tmp * 100) / 100);
-      },
-
-      cancelArticle: function () {
-        this.article = {};
-        this.$.articleDes.focus();
-      },
-
-      addArticle: function (e) {
-        if (e.keyCode === 13 || e.keyCode === 9){
-          this.push('tmpDevis.articles',
-          {
-            des: this.article.des,
-            qty: this.article.qty,
-            price: this.article.price,
-            total: this.article.total
-          });
-          this.updateTotal(this.article.total);
-          this.article = {};
-          this.$.articleDes.focus();
-        }
-      },
-
-      deleteArticle: function (e) {
-        var tmp = [];
-        if (this.tmpDevis.articles.length > 0){
-          for (var i = this.tmpDevis.articles.length - 1; i >= e.model.index; i--){
-            tmp.push(this.tmpDevis.articles[i]);
-            this.pop('tmpDevis.articles');
-          }
-          for (var i = tmp.length - 2; i >= 0; i--){
-            this.push('tmpDevis.articles', tmp[i]);
-          }
-        }
-        this.updateTotal();
       },
 
       check: function () {
@@ -312,11 +170,6 @@
       delete: function () {
         this.fire('delete');
       },
-
-      test: function () {
-        console.log(this.tmpDevis);
-        console.log(this.article);
-      }
     });
   </script>
 </dom-module>

@@ -1,0 +1,272 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="table-articles">
+  <template>
+    <style is="custom-style" include="shared-styles">
+      :host {
+        display: block;
+      }
+      #startSelector {
+        width: 0;
+        height: 0;
+      }
+      table {
+        width: 100%;
+      }
+      table td {
+        padding: 0;
+      }
+      table {
+        text-align: center;
+        border-collapse: collapse;
+      }
+       table th {
+        padding: 0 10px;
+        height: 54px;
+        font-weight: 300;
+      }
+       table td {
+        padding: 0 10px;
+        height: 48px;
+        font-weight: 100;
+      }
+      table tr td:first-child, table tr th:first-child {
+        text-align: left;
+      }
+      table tr td:last-child, table tr th:last-child {
+        text-align: right;
+      }
+      table tbody tr:hover {
+        background-color: #EEEEEE;
+      }
+      table thead tr th {
+        border-bottom: 1px solid #d4d4d4;
+      }
+      table tbody tr:not(:last-child) td {
+        border-bottom: 1px solid var(--app-divider-color);
+      }
+      table tfoot tr td:not(:last-child) {
+        text-align: right;
+      }
+      @media screen and (max-width: 768px) {
+        table th {
+         padding: 0 4px;
+       }
+        table td {
+         padding: 0 4px;
+       }
+      }
+    </style>
+
+    <table>
+      <thead>
+
+        <tr>
+          <th>
+            Désignation
+          </th>
+          <th>
+            Quantité
+          </th>
+          <th>
+            Prix
+          </th>
+          <th>
+            Total
+          </th>
+        </tr>
+
+      </thead>
+      <tbody>
+
+        <template is="dom-repeat" items="{{articles}}">
+          <tr>
+            <td>
+              <div hidden$="{{editable}}">
+                {{item.des}}
+              </div>
+              <div hidden$="{{!editable}}">
+                <paper-input value="{{item.des}}"></paper-input>
+              </div>
+            </td>
+
+            <td>
+              <div hidden$="{{editable}}">
+                {{item.qty}}
+              </div>
+              <div hidden$="{{!editable}}">
+                <paper-input type="number" value="{{item.qty}}"></paper-input>
+              </div>
+            </td>
+
+            <td>
+              <div hidden$="{{editable}}">
+                {{item.price}}
+              </div>
+              <div hidden$="{{!editable}}">
+                <paper-input type="number" value="{{item.price}}"></paper-input>
+              </div>
+            </td>
+
+            <td>
+              <div hidden$="{{editable}}">
+                {{item.total}}
+              </div>
+              <div hidden$="{{!editable}}">
+                {{item.total}}
+                <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
+              </div>
+            </td>
+          </tr>
+        </template>
+
+        <tr hidden$="{{!editable}}">
+          <td>
+            <span id="startSelector"></span>
+            <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
+          </td>
+          <td>
+            <paper-input type="number" label="Quantité" value="{{article.qty}}"></paper-input>
+          </td>
+          <td>
+            <paper-input type="number" label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
+          </td>
+          <td>
+            {{article.total}}
+            <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
+          </td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <td></td>
+        <td></td>
+        <td>
+          Total
+        </td>
+        <td>
+          {{total}} €
+        </td>
+      </tfoot>
+    </table>
+
+  </template>
+  <script>
+    Polymer({
+      is: 'table-articles',
+
+      properties: {
+        editable: {
+          type: Boolean,
+          value: false
+        },
+        articles: {
+          type: Array,
+        },
+        article: {
+          type: Object,
+          value: function () {
+            return {
+              des: "",
+              qty: "",
+              price: "",
+              total: 0
+            }
+          }
+        },
+        total: {
+          type: Number,
+          value: 0,
+        },
+        articleItemTest: {
+          type: String,
+          value: "articles.#"
+        }
+      },
+
+      observers: [
+        '_changeArticle(article.price, article.qty)',
+        '_changeFactureArticle(articles.*)'
+      ],
+
+      initialize: function () {
+        this.article = {};
+      },
+
+      _changeArticle: function (price, qty) {
+        this.set('article.total', Math.round(price * qty * 100) / 100);
+      },
+
+      _changeFactureArticle: function (data) {
+        if (this.articleItemTest === data.path.substr(0, this.articleItemTest.length)){
+          var qty = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".qty");
+          var price = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".price");
+
+          this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", Math.round(price * qty * 100) / 100);
+          this.updateTotal();
+        }
+      },
+
+      updateTotal: function (value) {
+        var tmp = 0;
+        if (value){
+          tmp = this.total + value;
+        }
+        else {
+          this.articles.forEach(function (item){
+            tmp += item.total;
+          });
+        }
+        this.set('total', Math.round(tmp * 100) / 100);
+      },
+
+      cancelArticle: function () {
+        this.article = {};
+        this.$.articleDes.focus();
+      },
+
+      addArticle: function (e) {
+        if (e.keyCode === 13 || e.keyCode === 9){
+          this.push('articles',
+          {
+            des: this.article.des,
+            qty: this.article.qty,
+            price: this.article.price,
+            total: this.article.total
+          });
+          this.updateTotal(this.article.total);
+          this.article = {};
+          if (e == 9){
+            this.$.startSelector.focus();
+          }
+          else {
+            this.$.articleDes.focus();
+          }
+        }
+      },
+
+      deleteArticle: function (e) {
+        var tmp = [];
+        if (this.articles.length > 0){
+          for (var i = this.articles.length - 1; i >= e.model.index; i--){
+            tmp.push(this.articles[i]);
+            this.pop('articles');
+          }
+          for (var i = tmp.length - 2; i >= 0; i--){
+            this.push('articles', tmp[i]);
+          }
+        }
+        this.updateTotal();
+      },
+
+    });
+  </script>
+</dom-module>

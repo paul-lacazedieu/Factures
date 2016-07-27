@@ -3,17 +3,14 @@
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
-<link rel="import" href="../../bower_components/iron-input/iron-input.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="../shared-styles.html">
 <link rel="import" href="../utils/date-utils.html">
 <link rel="import" href="../utils/piece-header.html">
+<link rel="import" href="../utils/table-articles.html">
 
 <dom-module id="facture-editor">
   <template>
@@ -33,10 +30,6 @@
 
       .entete {
         margin-bottom: 15px;
-      }
-
-      .entete .entreprise-info {
-        margin-right: 15px;
       }
 
       .facture-info p {
@@ -82,68 +75,7 @@
           <!-- Fin informations facture -->
 
           <!-- Début liste articles -->
-          <div class="vertical layout articles-list">
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Désignation
-                  </th>
-                  <th>
-                    Quantité
-                  </th>
-                  <th>
-                    Prix
-                  </th>
-                  <th>
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <template is="dom-repeat" items="{{tmpFacture.articles}}">
-                  <tr>
-                    <td>
-                      <paper-input label="Désignation" value="{{item.des}}"></paper-input>
-                    </td>
-                    <td>
-                      <paper-input type="number" label="Quantité" value="{{item.qty}}"></paper-input>
-                    </td>
-                    <td>
-                      <paper-input type="number" label="Prix" value="{{item.price}}"></paper-input>
-                    </td>
-                    <td>
-                      {{item.total}}
-                      <paper-icon-button icon="delete" on-tap="deleteArticle"></paper-icon-button>
-                    </td>
-                  </tr>
-                </template>
-                <tr>
-                  <td>
-                    <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
-                  </td>
-                  <td>
-                    <paper-input type="number" label="Quantité" value="{{article.qty}}"></paper-input>
-                  </td>
-                  <td>
-                    <paper-input type="number" label="Prix" on-keydown="addArticle" value="{{article.price}}"></paper-input>
-                  </td>
-                  <td>
-                    {{article.total}}
-                    <paper-icon-button icon="cancel" on-tap="cancelArticle"></paper-icon-button>
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  Total: {{tmpFacture.total}} €
-                </td>
-              </tfoot>
-            </table>
-          </div>
+          <table-articles id="articles" editable articles="{{tmpFacture.articles}}" total="{{tmpFacture.total}}"></table-articles>
           <!-- Fin liste articles -->
 
         </div>
@@ -162,9 +94,6 @@
       is: 'facture-editor',
 
       properties: {
-        uid: {
-          type: String
-        },
         user: {
           type: Object
         },
@@ -180,27 +109,8 @@
         tmpFacture: {
           type: Object,
         },
-        article: {
-          type: Object,
-          value: function () {
-            return {
-              des: "",
-              qty: "",
-              price: "",
-              total: 0
-            }
-          },
-        },
-        articleItemTest: {
-          type: String,
-          value: "tmpFacture.articles.#"
-        }
       },
 
-      observers: [
-        '_changeArticle(article.price, article.qty)',
-        '_changeFactureArticle(tmpFacture.articles.*)'
-      ],
 
       initialize: function () {
         this.tmpFacture = {
@@ -213,73 +123,13 @@
         };
         this.check();
         this.$.header.initialize();
+        this.$.articles.initialize();
       },
 
       _clientChanged: function () {
         if (this.$.header.client){
           this.tmpFacture.client_key = this.$.header.client.$key;
         }
-      },
-
-      _changeArticle: function (price, qty) {
-        this.set('article.total', Math.round(price * qty * 100) / 100);
-      },
-
-      _changeFactureArticle: function (data) {
-        if (this.articleItemTest === data.path.substr(0, this.articleItemTest.length)){
-          var qty = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".qty");
-          var price = this.get(data.path.substr(0, data.path.lastIndexOf('.')) + ".price");
-
-          this.set(data.path.substr(0, data.path.lastIndexOf('.')) + ".total", Math.round(price * qty * 100) / 100);
-          this.updateTotal();
-        }
-      },
-
-      updateTotal: function (value) {
-        var tmp = 0;
-        if (value){
-          tmp = this.tmpFacture.total + value;
-        }
-        else {
-          this.tmpFacture.articles.forEach(function (item){
-            tmp += item.total;
-          });
-        }
-        this.set('tmpFacture.total', Math.round(tmp * 100) / 100);
-      },
-
-      cancelArticle: function () {
-        this.article = {};
-        this.$.articleDes.focus();
-      },
-
-      addArticle: function (e) {
-        if (e.keyCode === 13 || e.keyCode === 9){
-          this.push('tmpFacture.articles',
-          {
-            des: this.article.des,
-            qty: this.article.qty,
-            price: this.article.price,
-            total: this.article.total
-          });
-          this.updateTotal(this.article.total);
-          this.article = {};
-          this.$.articleDes.focus();
-        }
-      },
-
-      deleteArticle: function (e) {
-        var tmp = [];
-        if (this.tmpFacture.articles.length > 0){
-          for (var i = this.tmpFacture.articles.length - 1; i >= e.model.index; i--){
-            tmp.push(this.tmpFacture.articles[i]);
-            this.pop('tmpFacture.articles');
-          }
-          for (var i = tmp.length - 2; i >= 0; i--){
-            this.push('tmpFacture.articles', tmp[i]);
-          }
-        }
-        this.updateTotal();
       },
 
       check: function () {
@@ -320,10 +170,6 @@
         this.fire('delete');
       },
 
-      test: function () {
-        console.log(this.tmpFacture);
-        console.log(this.article);
-      }
     });
   </script>
 </dom-module>

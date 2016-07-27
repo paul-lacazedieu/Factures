@@ -6,8 +6,10 @@
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
-<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+<link rel="import" href="../utils/table-articles.html">
 
+<link rel="import" href="../shared-styles.html">
+<link rel="import" href="../utils/piece-header.html">
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="facture-detail">
@@ -30,37 +32,12 @@
         margin-bottom: 15px;
       }
 
-      .entete .entreprise-info {
-        margin-right: 15px;
-      }
-
       .facture-info p {
         margin: 5px 0px;
       }
 
       .facture-info {
         margin-bottom: 15px;
-      }
-
-      .list .item {
-        padding: 10px 5px
-      }
-
-      @media screen and (max-width: 768px) {
-        .horizontal.layout.entete {
-          display: inline-block;
-        }
-        .entreprise-info {
-          margin-right: 0px;
-          margin-bottom: 15px;
-          width: 100%;
-          float: left;
-        }
-
-        .client-info {
-          width: 100%;
-          float: left;
-        }
       }
     </style>
 
@@ -73,6 +50,7 @@
           <!-- Début en-tête -->
           <piece-header
             id="header"
+            editable={{edit}}
             clients="{{clients}}"
             client="{{client}}"
             user="{{user}}">
@@ -93,52 +71,7 @@
           <!-- Fin informations facture -->
 
           <!-- Début liste articles -->
-          <div class="vertical layout articles-list">
-            <table>
-              <thead>
-                <tr>
-                  <th>
-                    Désignation
-                  </th>
-                  <th>
-                    Quantité
-                  </th>
-                  <th>
-                    Prix
-                  </th>
-                  <th>
-                    Total
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <template is="dom-repeat" items="{{facture.articles}}">
-                  <tr>
-                    <td>
-                      {{item.des}}
-                    </td>
-                    <td>
-                      {{item.qty}}
-                    </td>
-                    <td>
-                      {{item.price}}
-                    </td>
-                    <td>
-                      {{item.total}}
-                    </td>
-                  </tr>
-                </template>
-              </tbody>
-              <tfoot>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                  Total: {{facture.total}} €
-                </td>
-              </tfoot>
-            </table>
-          </div>
+          <table-articles articles="{{facture.articles}}" total="{{facture.total}}"></table-articles>
           <!-- Fin liste articles -->
 
         </div>
