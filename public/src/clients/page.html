@@ -80,7 +80,7 @@
 
         <clients-list id="clientsList" class="full-height" uid="{{uid}}"></clients-list>
         <client-detail id="detail" key="{{clientKey}}" client="{{client}}"></client-detail>
-        <client-editor id="editor" on-delete-client="deleteClient" key="{{clientKey}}" client="{{client}}" on-save="showClient"></client-editor>
+        <client-editor id="editor" on-delete-client="deleteClient" key="{{clientKey}}" client="{{client}}" on-client-saved="showClient"></client-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -116,7 +116,7 @@
         },
         clientKey: {
           type: Number,
-          value: -1
+          value: 0
         },
       },
 
@@ -138,6 +138,7 @@
             this.clientKey = (this.editActive == true) ? this.showData.id : this.$.clientsList.getNew();
             this.$.addClient.style.display = "none";
             this.selected = 2;
+            this.$.editor.initialize();
           }
         }
       },

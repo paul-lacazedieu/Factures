@@ -9,8 +9,6 @@
 <link rel="import" href="../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
 
-<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
-
 <link rel="import" href="../shared-styles.html">
 
 <dom-module id="client-editor">
@@ -36,14 +34,14 @@
 
         <paper-card class="flex">
             <div class="card-content">
-              <paper-input label="Nom" value="{{client.name}}"></paper-input>
-              <paper-input label="E-mail" value="{{client.email}}"></paper-input>
-              <paper-input label="Adresse" value="{{client.address}}"></paper-input>
-              <paper-input label="Téléphone" value="{{client.phone_number}}"></paper-input>
+              <paper-input label="Nom" value="{{tmpClient.name}}"></paper-input>
+              <paper-input label="E-mail" value="{{tmpClient.email}}"></paper-input>
+              <paper-input label="Adresse" value="{{tmpClient.address}}"></paper-input>
+              <paper-input label="Téléphone" value="{{tmpClient.phone_number}}"></paper-input>
             </div>
             <div class="card-actions horizontal layout justified">
               <paper-icon-button icon="delete" on-tap="openDeleteDialog"></paper-icon-button>
-              <a href="/#/clients/show/{{key}}"><paper-button>Enregistrer</paper-button></a>
+              <paper-button on-tap="save">Enregistrer</paper-button>
             </div>
           </paper-card>
 
@@ -54,7 +52,7 @@
       id="deleteDialog">
       <h2>Supprimer le client</h2>
       <paper-dialog-scrollable>
-        Êtes-vous sûr de vouloir supprimer le client {{client.name}}?
+        Êtes-vous sûr de vouloir supprimer le client {{tmpClient.name}}?
       </paper-dialog-scrollable>
       <div class="buttons">
         <paper-button dialog-dismiss>Annuler</paper-button>
@@ -77,6 +75,43 @@
         client: {
           type: Object,
         },
+        tmpClient: {
+          type: Object,
+          value: {}
+        },
+      },
+
+      initialize: function () {
+        this.tmpClient = {};
+        this.check();
+      },
+
+      check: function () {
+        if (this.client){
+          if (this.client.name){
+            this.set('tmpClient.name', this.client.name);
+          }
+          if (this.client.email){
+            this.set('tmpClient.email', this.client.email);
+          }
+          if (this.client.address){
+            this.set('tmpClient.address', this.client.address);
+          }
+          if (this.client.phone_number){
+            this.set('tmpClient.phone_number', this.client.phone_number);
+          }
+          console.log(this.tmpClient);
+        }
+      },
+
+      save: function () {
+        console.log(this.tmpClient);
+        this.set('client.name', this.tmpClient.name);
+        this.set('client.email', this.tmpClient.email);
+        this.set('client.address', this.tmpClient.address);
+        this.set('client.phone_number', this.tmpClient.phone_number);
+        console.log(this.client);
+        this.fire('client-saved');
       },
 
       openDeleteDialog: function () {

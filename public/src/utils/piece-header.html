@@ -74,7 +74,7 @@
                 <vaadin-combo-box
                   id="comboBox"
                   hidden$="{{!editable}}"
-                  Label="Client"
+                  label="Client"
                   items=[[clients]]
                   item-label-path="name"
                   item-value-path="$key"
@@ -123,8 +123,9 @@
       },
 
       initialize: function () {
+        this.client = {};
+        this.$.comboBox.value = '';
         if (this.client){
-          console.log(this.client);
           this.$.comboBox.value = this.client.$key;
         }
       },
@@ -132,7 +133,6 @@
       clientValueChanged: function(event) {
         if (event.detail.value && !(this.client && event.detail.value == this.client.$key)){
           this.client = this.clients[event.detail.value];
-          console.log('fire');
           this.fire('client-changed')
         }
       },
