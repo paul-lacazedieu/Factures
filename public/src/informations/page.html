@@ -56,7 +56,7 @@
     <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
-          <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
+          <a id="backButton" href="/#/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
           <div title>Mes informations</div>
           <div class="flex"></div>
         </app-toolbar>
@@ -113,19 +113,19 @@
       _routeChanged: function (route) {
         if (route && route.prefix == '/informations'){
           if (this.showActive){
-            this.$.backButton.href = "/homepage"
+            this.$.backButton.href = "/#/homepage"
             this.selected = 0;
           }
           else if (this.editActive){
             this.$.editor.initialize();
-            this.$.backButton.href = "/informations/show"
+            this.$.backButton.href = "/#/informations/show"
             this.selected = 1;
           }
         }
       },
 
       showInformations: function () {
-        this.set('route.path', '/informations/show');
+        this.set('route.path', '/#/informations/show');
       }
 
     });

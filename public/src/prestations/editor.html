@@ -1,0 +1,95 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+
+<link rel="import" href="../../bower_components/polymerfire/firebase-document.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="prestation-editor">
+  <template>
+    <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
+      :host {
+        display: block;
+      }
+
+      #card-container {
+        width: 80%;
+      }
+
+      #editableInfoCard, #delete {
+        display: none;
+      }
+
+    </style>
+
+    <div class="full-height vertical layout center">
+
+      <div id="card-container" class="flex horizontal layout center">
+
+        <paper-card class="flex">
+            <div class="card-content">
+              <paper-input label="Nom" value="{{prestation.name}}"></paper-input>
+              <paper-input label="E-mail" value="{{prestation.unit}}"></paper-input>
+              <paper-input label="Adresse" value="{{prestation.price}}"></paper-input>
+            </div>
+            <div class="card-actions horizontal layout justified">
+              <paper-icon-button icon="delete" on-tap="openDeleteDialog"></paper-icon-button>
+              <a href="/#/prestations/show/{{key}}"><paper-button>Enregistrer</paper-button></a>
+            </div>
+          </paper-card>
+
+        </div>
+    </div>
+
+    <paper-dialog
+      id="deleteDialog">
+      <h2>Supprimer le prestation</h2>
+      <paper-dialog-scrollable>
+        Êtes-vous sûr de vouloir supprimer le prestation {{prestation.name}}?
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Annuler</paper-button>
+        <paper-button dialog-confirm on-tap="delete">Accepter</paper-button>
+      </div>
+    </paper-dialog>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'prestation-editor',
+
+      properties: {
+        key: {
+          type: Number
+        },
+        prestation: {
+          type: Object,
+        },
+      },
+
+      openDeleteDialog: function () {
+        this.$.deleteDialog.open();
+      },
+
+      delete: function (){
+        this.fire('delete-prestation');
+      },
+
+      test: function () {
+        console.log('test');
+      }
+
+    });
+  </script>
+</dom-module>

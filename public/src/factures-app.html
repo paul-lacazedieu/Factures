@@ -36,7 +36,7 @@
 
     </style>
 
-    <app-location route="{{route}}"></app-location>
+    <app-location route="{{route}}" use-hash-as-path></app-location>
     <app-route
       route="{{route}}"
       pattern="/:page"
@@ -57,7 +57,7 @@
         <user-clients id="clients" class="full-height" route="{{subroute}}" name="clients" uid="{{user.uid}}"></user-clients>
         <user-factures id="factures" class="full-height" route="{{subroute}}" name="factures" uid="{{user.uid}}"></user-factures>
         <user-devis id="devis" class="full-height" route="{{subroute}}" name="devis" uid="{{user.uid}}"></user-devis>
-        <user-prestations id="prestations" class="full-height" name="prestations" uid="{{user.uid}}"></user-prestations>
+        <user-prestations id="prestations" class="full-height" route="{{subroute}}" name="prestations" uid="{{user.uid}}"></user-prestations>
         <user-informations id="informations" class="full-height" route="{{subroute}}" name="informations" uid="{{user.uid}}"></user-informations>
         <error-page class="full-height" name="404"></error-page>
       </neon-animated-pages>
@@ -87,7 +87,7 @@
         directoryList: {
           type: Array,
           value: function (){
-            return ['devis', 'factures', 'clients', 'informations']//'factures', 'clients', 'devis', 'prestations'
+            return ['devis', 'factures', 'clients', 'informations', 'prestations']//'factures', 'clients', 'devis'
           }
         },
         user: {
@@ -103,7 +103,14 @@
         '_routePageChanged(routeData.page)',
       ],
 
+      ready: function() {
+        this.location = '/#/';
+        this.set('route.path', '/login');
+      },
+
       _routePageChanged: function(page) {
+        console.log(page);
+        console.log(this.route);
         if (this.page == page){
           return;
         }
@@ -115,7 +122,6 @@
           this.routeData.page = '404';
           return;
         }
-        console.log(page);
         this.page = page;
       },
 

@@ -1,11 +1,20 @@
-<dom-module id="client-item">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../../bower_components/paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="prestation-item">
     <template>
       <style is="custom-style" include="shared-styles iron-flex iron-positioning iron-flex-alignment">
         :host {
           display: block;
         }
 
-        .vertical.layout{
+        .horizontal.layout{
           padding: 10px;
         }
 
@@ -20,15 +29,22 @@
 
         .little {
           font-size: 14px;
+          text-align: right;
+        }
+
+        @media screen and (max-width: 768px) {
+          .little {
+            display: none;
+          }
         }
       </style>
 
-      <a  href="/clients/show/{{client.$key}}">
-        <div class="vertical layout">
-          <p>{{client.name}}</p>
-          <div class="little">
-            <p>{{client.address}}</p>
-            <p>{{client.phone_number}}</p>
+      <a  href="/#/prestations/show/{{prestation.$key}}">
+        <div class="horizontal layout">
+          <p class="flex">{{prestation.name}}</p>
+          <div class="vertical layout little">
+            <p>{{prestation.unit}}</p>
+            <p>{{prestation.price}}</p>
           </div>
           <paper-ripple fit></paper-ripple>
         </div>
@@ -37,10 +53,10 @@
     </template>
     <script>
       Polymer({
-        is: 'client-item',
+        is: 'prestation-item',
 
         properties: {
-          client: {
+          prestation: {
             type: Object
           }
         }

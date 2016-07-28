@@ -65,10 +65,10 @@
     <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
         <app-toolbar>
-          <a id="backButton" href="/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
+          <a id="backButton" href="/#/homepage"><paper-icon-button icon="arrow-back"></paper-icon-button></a>
           <div title>Mes clients</div>
           <div class="flex"></div>
-          <a href="/clients/add"><paper-icon-button id="addClient" icon="add"></paper-icon-button></a>
+          <a href="/#/clients/add"><paper-icon-button id="addClient" icon="add"></paper-icon-button></a>
         </app-toolbar>
       </app-header>
 
@@ -125,16 +125,16 @@
           if (this.listActive){
             this.selected = 0;
             this.$.addClient.style.display = "block";
-            this.$.backButton.href = "/homepage"
+            this.$.backButton.href = "/#/homepage"
           }
           else if (this.showActive){
-            this.$.backButton.href = "/clients/list"
+            this.$.backButton.href = "/#/clients/list"
             this.clientKey = this.showData.id;
             this.$.addClient.style.display = "none";
             this.selected = 1;
           }
           else if (this.editActive || this.addActive){
-            this.$.backButton.href = "/clients/list"
+            this.$.backButton.href = "/#/clients/list"
             this.clientKey = (this.editActive == true) ? this.showData.id : this.$.clientsList.getNew();
             this.$.addClient.style.display = "none";
             this.selected = 2;
