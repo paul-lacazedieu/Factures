@@ -17,6 +17,9 @@
       #startSelector {
         width: 0;
         height: 0;
+        position: fixed;
+        left: -100px;
+        top: -100px;
       }
       table {
         width: 100%;
@@ -134,7 +137,7 @@
 
         <tr hidden$="{{!editable}}">
           <td>
-            <span id="startSelector"></span>
+            <button id="startSelector"></button>
             <paper-input id="articleDes" label="Désignation" value="{{article.des}}"></paper-input>
           </td>
           <td>
@@ -248,7 +251,7 @@
           });
           this.updateTotal(this.article.total);
           this.article = {};
-          if (e == 9){
+          if (e.keyCode == 9){
             this.$.startSelector.focus();
           }
           else {

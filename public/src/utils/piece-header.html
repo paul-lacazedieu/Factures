@@ -130,7 +130,7 @@
       },
 
       clientValueChanged: function(event) {
-        if (event.detail.value && event.detail.value != this.client.$key){
+        if (event.detail.value && !(this.client && event.detail.value == this.client.$key)){
           this.client = this.clients[event.detail.value];
           console.log('fire');
           this.fire('client-changed')
