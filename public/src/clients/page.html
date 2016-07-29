@@ -58,7 +58,7 @@
     <firebase-document
       app-name="factures"
       id="document"
-      path="/users/[[uid]]/clients/[[clientKey]]"
+      path="/users/[[handler.uid]]/clients/[[clientKey]]"
       data="{{client}}">
     </firebase-document>
 
@@ -78,7 +78,7 @@
         exit-animation="fade-out-animation"
         selected="{{selected}}">
 
-        <clients-list id="clientsList" class="full-height" uid="{{uid}}"></clients-list>
+        <clients-list id="clientsList" class="full-height" clients="{{handler.clients}}"></clients-list>
         <client-detail id="detail" key="{{clientKey}}" client="{{client}}"></client-detail>
         <client-editor id="editor" on-delete-client="deleteClient" key="{{clientKey}}" client="{{client}}" on-client-saved="showClient"></client-editor>
 
@@ -91,8 +91,8 @@
 
       is: 'user-clients',
       properties: {
-        uid: {
-          type: String
+        handler: {
+          type: Object
         },
         route:{
           type: Object,
@@ -118,6 +118,10 @@
           type: Number,
           value: 0
         },
+      },
+
+      attached: function () {
+        this.fire('request-clients');
       },
 
       _routeChanged: function (route) {

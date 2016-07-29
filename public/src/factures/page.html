@@ -67,21 +67,21 @@
     <firebase-document
       app-name="factures"
       id="factureDoc"
-      path="/users/[[uid]]/factures/[[factureKey]]"
+      path="/users/[[handler.uid]]/factures/[[factureKey]]"
       data="{{facture}}">
     </firebase-document>
-
+<!--
     <firebase-document
       app-name="factures"
       id="userDoc"
       path="/users/[[uid]]/infos"
       data="{{user}}">
-    </firebase-document>
+    </firebase-document> -->
 
     <firebase-query
       id="clientsQuery"
       app-name="factures"
-      path="/users/[[uid]]/clients"
+      path="/users/[[handler.uid]]/clients"
       data="{{clients}}">
     </firebase-query>
 
@@ -101,9 +101,9 @@
         exit-animation="fade-out-animation"
         selected="{{selected}}">
 
-        <factures-list id="facturesList" class="full-height" uid="{{uid}}" clients="{{clients}}"></factures-list>
-        <facture-detail id="detail" key="{{factureKey}}" clients="{{clients}}" user="{{user}}" facture="{{facture}}"></facture-detail>
-        <facture-editor id="editor" key="{{factureKey}}" clients="{{clients}}" user="{{user}}" facture="{{facture}}" on-delete="deleteFacture" on-save="showFacture"></facture-editor>
+        <factures-list id="facturesList" class="full-height" factures="{{handler.factures}}" clients="{{handler.clients}}"></factures-list>
+        <facture-detail id="detail" key="{{factureKey}}" clients="{{handler.clients}}" user="{{handler.user}}" facture="{{facture}}"></facture-detail>
+        <facture-editor id="editor" key="{{factureKey}}" clients="{{handler.clients}}" user="{{handler.user}}" facture="{{facture}}" on-delete="deleteFacture" on-save="showFacture"></facture-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -114,8 +114,8 @@
       is: 'user-factures',
 
       properties: {
-        uid: {
-          type: String
+        handler: {
+          type: Object
         },
         route:{
           type: Object,
@@ -141,6 +141,11 @@
           type: Number,
           value: -1
         },
+      },
+
+      attached: function () {
+        this.fire('request-factures');
+        this.fire('request-clients');
       },
 
       _routeChanged: function (route) {

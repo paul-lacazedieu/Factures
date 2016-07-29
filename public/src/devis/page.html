@@ -67,23 +67,23 @@
     <firebase-document
       app-name="factures"
       id="devisDoc"
-      path="/users/[[uid]]/devis/[[devisKey]]"
+      path="/users/[[handler.uid]]/devis/[[devisKey]]"
       data="{{devis}}">
     </firebase-document>
 
     <firebase-query
       id="clientsQuery"
       app-name="factures"
-      path="/users/[[uid]]/clients"
+      path="/users/[[handler.uid]]/clients"
       data="{{clients}}">
     </firebase-query>
 
-    <firebase-document
+    <!-- <firebase-document
       app-name="factures"
       id="userDoc"
       path="/users/[[uid]]/infos"
       data="{{user}}">
-    </firebase-document>
+    </firebase-document> -->
 
     <app-header-layout class="full-height" has-scrolling-region>
       <app-header condenses reveals effects="waterfall">
@@ -101,9 +101,9 @@
         exit-animation="fade-out-animation"
         selected="{{selected}}">
 
-        <devis-list id="devisList" class="full-height" clients="{{clients}}" uid="{{uid}}"></devis-list>
-        <devis-detail id="detail" key="{{devisKey}}" clients="{{clients}}" user="{{user}}" devis="{{devis}}"></devis-detail>
-        <devis-editor id="editor" key="{{devisKey}}" clients="{{clients}}" user="{{user}}" devis="{{devis}}" on-delete="deleteDevis" on-save="showDevis"></devis-editor>
+        <devis-list id="devisList" class="full-height" clients="{{handler.clients}}" devis="{{handler.devis}}"></devis-list>
+        <devis-detail id="detail" key="{{devisKey}}" clients="{{handler.clients}}" user="{{handler.user}}" devis="{{devis}}"></devis-detail>
+        <devis-editor id="editor" key="{{devisKey}}" clients="{{handler.clients}}" user="{{handler.user}}" devis="{{devis}}" on-delete="deleteDevis" on-save="showDevis"></devis-editor>
 
       </neon-animated-pages>
     </app-header-layout>
@@ -114,8 +114,8 @@
       is: 'user-devis',
 
       properties: {
-        uid: {
-          type: String
+        handler: {
+          type: Object
         },
         route:{
           type: Object,
@@ -141,6 +141,12 @@
           type: Number,
           value: -1
         },
+      },
+
+      attached: function () {
+        this.fire('request-devis');
+        this.fire('request-clients');
+        console.log(this.handler.user);
       },
 
       _routeChanged: function (route) {

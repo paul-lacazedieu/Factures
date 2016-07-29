@@ -58,7 +58,7 @@
     <firebase-document
       app-name="factures"
       id="document"
-      path="/users/[[uid]]/prestations/[[prestationKey]]"
+      path="/users/[[handler.uid]]/prestations/[[prestationKey]]"
       data="{{prestation}}">
     </firebase-document>
 
@@ -78,7 +78,7 @@
         exit-animation="fade-out-animation"
         selected="{{selected}}">
 
-        <prestations-list id="prestationsList" class="full-height" uid="{{uid}}"></prestations-list>
+        <prestations-list id="prestationsList" class="full-height" prestations="{{handler.prestations}}"></prestations-list>
         <prestation-detail id="detail" key="{{prestationKey}}" prestation="{{prestation}}"></prestation-detail>
         <prestation-editor id="editor" on-delete-prestation="deletePrestation" key="{{prestationKey}}" prestation="{{prestation}}" on-save="showPrestation"></prestation-editor>
 
@@ -91,8 +91,8 @@
 
       is: 'user-prestations',
       properties: {
-        uid: {
-          type: String
+        handler: {
+          type: Object
         },
         route:{
           type: Object,
@@ -118,6 +118,10 @@
           type: Number,
           value: -1
         },
+      },
+
+      attached: function () {
+        this.fire('request-prestations');
       },
 
       _routeChanged: function (route) {

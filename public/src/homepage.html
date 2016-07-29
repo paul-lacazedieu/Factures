@@ -87,6 +87,15 @@
 
       is: 'user-homepage',
 
+      properties: {
+        uid: {
+          type: String,
+        },
+        clients: {
+          type: Array,
+        }
+      },
+
       signOut: function () {
         this.fire('sign-out')
       }
